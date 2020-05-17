@@ -55,8 +55,8 @@ SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY', None)
 # Flask-Babel.
 LANGUAGES = {
     'en': 'English',
-    'kl': 'Klingon',
-    'es': 'Spanish'
+    'es': 'Spanish',
+    'de': 'German',
 }
 BABEL_DEFAULT_LOCALE = 'en'
 
