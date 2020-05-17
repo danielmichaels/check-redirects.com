@@ -1,10 +1,24 @@
 {% extends 'layouts/app.html' %}
 
-{% block title %} {{  config['SITE_NAME'] }}{% endblock %}
+{% block title %} {{ config['SITE_NAME'] }}{% endblock %}
 {% block meta_description %}  {% endblock %}
 
 {% block body %}
-  <div class="container">
-
-  </div>
+    <div class="container-fluid masthead">
+        <h1>
+            Check Redirects
+        </h1>
+        <div class="container">
+        <form>
+            <div class="form-group">
+                <label for="checkUrlForm">Check URL here.</label>
+                <input type="text" class="form-control" id="checkUrlForm"
+                       aria-describedby="checker">
+                <small id="checkUrlMuted" class="form-text text-muted">enter
+                    the URL you want to check here.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        </div>
+    </div>
 {% endblock %}
