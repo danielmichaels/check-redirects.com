@@ -1,7 +1,5 @@
 import httpx
-from httpx._exceptions import TimeoutException
-from httpx import URL, Response
-from urllib3.util import Url
+from httpx import TimeoutException, Headers
 
 
 class RedirectChecker:
@@ -12,24 +10,38 @@ class RedirectChecker:
     def __init__(self, url):
         self.url = url
         self.resp = None
+        self.json_list = []
+        self._json = {}
 
     def _resp(self):
 
         with httpx.Client() as client:
             try:
-                resp = client.get(self.url)
+                resp = client.get(self.url, allow_redirects=True)
                 self.resp = resp
             except TimeoutException() as e:
                 print(e)
 
     def path_taken(self):
+        hop = 0
         if self.resp.history:
-            hop = 0
             for url in self.resp.history:
                 hop += 1
-                print(f'{hop} URL: {url.url}')
+                print(
+                    f"[{url.status_code}] {hop} URL: {url.url} - headers: {type(url.headers)}"
+                )
+                self._json["hop"] = hop
+                self._json["url"] = str(url.url)
+                # self._json["headers"] = url.headers TODO: consider creating custom serializer for this
+                self.json_list.append(self._json.copy())
+        print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
+        self._json["hop"] = hop + 1
+        self._json["url"] = str(self.resp.url)
+        # self._json["headers"] = self.resp.headers
+        self.json_list.append(self._json)
 
 
-r = RedirectChecker('http://httpbin.org/redirect/2')
+r = RedirectChecker("http://httpbin.org/redirect/5")
+# r = RedirectChecker('http://nyti.ms/1QETHgV')
 r._resp()
 r.path_taken()
