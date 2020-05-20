@@ -10,8 +10,13 @@ class RedirectChecker:
     def __init__(self, url):
         self.url = url
         self.resp = None
-        self.json_list = []
         self._json = {}
+        self.json_list = []
+        self._resp()
+        self.path_taken()
+
+    def run(self):
+        return self.json_list
 
     def _resp(self):
 
@@ -27,21 +32,19 @@ class RedirectChecker:
         if self.resp.history:
             for url in self.resp.history:
                 hop += 1
-                print(
-                    f"[{url.status_code}] {hop} URL: {url.url} - headers: {type(url.headers)}"
-                )
+                # print(
+                #     f"[{url.status_code}] {hop} URL: {url.url} - headers: {type(url.headers)}"
+                # )
                 self._json["hop"] = hop
                 self._json["url"] = str(url.url)
                 # self._json["headers"] = url.headers TODO: consider creating custom serializer for this
                 self.json_list.append(self._json.copy())
-        print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
+        # print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
         self._json["hop"] = hop + 1
         self._json["url"] = str(self.resp.url)
         # self._json["headers"] = self.resp.headers
         self.json_list.append(self._json)
 
 
-r = RedirectChecker("http://httpbin.org/redirect/5")
-# r = RedirectChecker('http://nyti.ms/1QETHgV')
-r._resp()
-r.path_taken()
+# r = RedirectChecker("http://httpbin.org/redirect/5")
+# print(r.json_list)
