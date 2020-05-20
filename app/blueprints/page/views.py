@@ -1,11 +1,22 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, flash, url_for, redirect
+
+from app.blueprints.page.forms import SearchForm
+from app.blueprints.redirect.redirect import RedirectChecker
 
 page = Blueprint('page', __name__, template_folder='templates')
 
 
-@page.route('/')
+@page.route('/', methods=['GET','POST'])
 def home():
-    return render_template('page/home.html')
+    form = SearchForm()
+
+    if form.validate_on_submit():
+        url = form.search.data
+        redirects = RedirectChecker(url)
+        print(redirects.json_list)
+        return redirect(url_for('page.home'))
+
+    return render_template('page/home.html', form=form)
 
 
 @page.route('/terms')
