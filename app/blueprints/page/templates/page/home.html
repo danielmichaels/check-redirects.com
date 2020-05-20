@@ -9,11 +9,11 @@
             Check Redirects
         </h1>
         <div class="container">
-        <form>
+        <form action="" method="post">
             <div class="form-group">
-                <label for="checkUrlForm">Check URL here.</label>
-                <input type="text" class="form-control" id="checkUrlForm"
-                       aria-describedby="checker">
+                {{ form.csrf_token() }}
+                <label for="search">Check URL here.</label>
+                {{ form.search(class_="form-control text-center") }}
                 <small id="checkUrlMuted" class="form-text text-muted">enter
                     the URL you want to check here.</small>
             </div>
