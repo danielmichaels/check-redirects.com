@@ -1,3 +1,4 @@
+import re
 from http.client import responses
 
 import httpx
@@ -29,23 +30,27 @@ class RedirectChecker:
 
         with httpx.Client() as client:
             try:
-                resp = client.get(self.url, allow_redirects=True)
+                resp = client.get(self._http(), allow_redirects=True, timeout=5.1)
                 self.resp = resp
             except TimeoutException as e:
                 self.json_list.append({"error": "URL Timed Out"})
-                # print('timeout')
             except InvalidURL as e:
                 # log this though
-                pass  # pass to fn:path_taken
+
+    def _http(self):
+        """
+        Prepend the URL with 'http://' if not added manually by the user.
+        :return: http:// + url
+        """
+        if not re.match("(?:http|https)://", self.url):
+            return f"http://{self.url}"
+        return self.url
 
     def path_taken(self):
         hop = 0
         if self.resp.history:
             for url in self.resp.history:
                 hop += 1
-                # print(
-                #     f"[{url.status_code}] {hop} URL: {url.url} - headers: {type(url.headers)}"
-                # )
                 self._json["hop"] = hop
                 self._json["url"] = str(url.url)
                 self._json["statusCode"] = [
@@ -56,9 +61,8 @@ class RedirectChecker:
                 ]
                 self._json["headers"] = dict(
                     url.headers
-                )  # TODO: consider creating custom serializer for this
+                )
                 self.json_list.append(self._json.copy())
-        # print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
         self._json["hop"] = hop + 1
         self._json["url"] = str(self.resp.url)
         self._json["statusCode"] = [
@@ -71,6 +75,7 @@ class RedirectChecker:
         self.json_list.append(self._json)
 
 
-# r = RedirectChecker("hi")
-r = RedirectChecker("http://httpbin.org/redirect/2")
-print(r.json_list[-1]["headers"])
+r = RedirectChecker("hi")
+# r = RedirectChecker("http://httpbin.org/redirect/2")
+# r = RedirectChecker("https://httpbin.org/redirect/2")
+print(r.json_list)
