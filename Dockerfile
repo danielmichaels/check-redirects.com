@@ -47,7 +47,6 @@ RUN apt-get update \
   && apt-get clean
 
 ARG FLASK_ENV="production"
-# Change this in cookiecutter
 ENV FLASK_ENV="${FLASK_ENV}" \
     FLASK_APP="app.app" \
     PYTHONUNBUFFERED="true"
@@ -64,5 +63,4 @@ ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 EXPOSE 8000
 
-# Change this in cookiecutter
-CMD ["gunicorn", "-c", "python:config.gunicorn", "app.app:create_app()"]
+CMD ["gunicorn", "-c", "python:config.gunicorn", "app.app:create_app()", "--worker-class=gthread"]
