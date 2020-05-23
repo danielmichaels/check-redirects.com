@@ -31,8 +31,12 @@ class RedirectChecker:
             try:
                 resp = client.get(self.url, allow_redirects=True)
                 self.resp = resp
-            except TimeoutException() as e:
-                print(e)
+            except TimeoutException as e:
+                self.json_list.append({"error": "URL Timed Out"})
+                # print('timeout')
+            except InvalidURL as e:
+                # log this though
+                pass  # pass to fn:path_taken
 
     def path_taken(self):
         hop = 0
@@ -50,7 +54,9 @@ class RedirectChecker:
                         "phrase": responses[int(url.status_code)],
                     }
                 ]
-                self._json["headers"] = dict(url.headers) #TODO: consider creating custom serializer for this
+                self._json["headers"] = dict(
+                    url.headers
+                )  # TODO: consider creating custom serializer for this
                 self.json_list.append(self._json.copy())
         # print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
         self._json["hop"] = hop + 1
@@ -65,5 +71,6 @@ class RedirectChecker:
         self.json_list.append(self._json)
 
 
-# r = RedirectChecker("http://httpbin.org/redirect/5")
-# print(r.json_list)
+# r = RedirectChecker("hi")
+r = RedirectChecker("http://httpbin.org/redirect/2")
+print(r.json_list[-1]["headers"])
