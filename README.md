@@ -1,20 +1,8 @@
-# Flask Blueprint
+# Check Redirects
 
-> A starter template based upon [Nick Janetakis](buildasaasappwithflask.com)' 
-> course
+ https://check-redirects.com
 
-## TODO
-
-- [ ] Clean out "snakeeyes" icons and references
-- [ ] Clean out `assets/app/modules`
-
-## Features
-
-- [x] Flask
-- [x] Celery
-- [x] Docker (docker-compose)
-- [x] User Registration
-- [x] Flask-Mail Intergration
+> A website for quickly and easily ascertaining the path to and final destination for shortened links, or ad links
 
 ## Setup
 
