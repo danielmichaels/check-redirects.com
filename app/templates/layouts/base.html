@@ -7,11 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-          content="{% block meta_description %}{% endblock %}">
+          content="{% block meta_description %} A website for quickly and easily ascertaining the path to and final destination for shortened links, or ad links{% endblock %}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{% block title %}{% endblock %}</title>
 
+    <link rel="shortcut icon"
+          href="{{ static_url_for('static', filename='images/favicon.ico') }}">
     <link
       rel="stylesheet"
       href="{{ static_url_for('static', filename='css/app.css') }}">
