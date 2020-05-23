@@ -2,7 +2,7 @@ import re
 from http.client import responses
 
 import httpx
-from httpx import TimeoutException, Headers, InvalidURL
+from httpx import TimeoutException, InvalidURL, NetworkError
 
 
 class RedirectChecker:
@@ -23,8 +23,9 @@ class RedirectChecker:
             self.path_taken()
             return self.json_list
         except AttributeError as e:
-            self.json_list.append({"error": "Invalid URL"})
-            print(f"Attribute Error: {e}")
+            self.json_list.append({"error": "Invalid URL, or No Response Received"})
+        except NetworkError as e:
+            self.json_list.append({"error": f"Could not resolve URL => '{self.url}'"})
 
     def _resp(self):
 
@@ -35,6 +36,7 @@ class RedirectChecker:
             except TimeoutException as e:
                 self.json_list.append({"error": "URL Timed Out"})
             except InvalidURL as e:
+                self.json_list.append({"error": "Invalid URL Entered"})
                 # log this though
 
     def _http(self):
@@ -53,18 +55,18 @@ class RedirectChecker:
                 hop += 1
                 self._json["hop"] = hop
                 self._json["url"] = str(url.url)
+                self._json["httpVersion"] = url.http_version
                 self._json["statusCode"] = [
                     {
                         "code": url.status_code,
                         "phrase": responses[int(url.status_code)],
                     }
                 ]
-                self._json["headers"] = dict(
-                    url.headers
-                )
+                self._json["headers"] = dict(url.headers)
                 self.json_list.append(self._json.copy())
         self._json["hop"] = hop + 1
         self._json["url"] = str(self.resp.url)
+        self._json["httpVersion"] = self.resp.http_version
         self._json["statusCode"] = [
             {
                 "code": self.resp.status_code,
