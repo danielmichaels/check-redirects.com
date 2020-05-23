@@ -1,5 +1,7 @@
+from http.client import responses
+
 import httpx
-from httpx import TimeoutException, Headers
+from httpx import TimeoutException, Headers, InvalidURL
 
 
 class RedirectChecker:
@@ -12,11 +14,16 @@ class RedirectChecker:
         self.resp = None
         self._json = {}
         self.json_list = []
-        self._resp()
-        self.path_taken()
+        self.run()
 
     def run(self):
-        return self.json_list
+        try:
+            self._resp()
+            self.path_taken()
+            return self.json_list
+        except AttributeError as e:
+            self.json_list.append({"error": "Invalid URL"})
+            print(f"Attribute Error: {e}")
 
     def _resp(self):
 
@@ -37,12 +44,24 @@ class RedirectChecker:
                 # )
                 self._json["hop"] = hop
                 self._json["url"] = str(url.url)
-                # self._json["headers"] = url.headers TODO: consider creating custom serializer for this
+                self._json["statusCode"] = [
+                    {
+                        "code": url.status_code,
+                        "phrase": responses[int(url.status_code)],
+                    }
+                ]
+                self._json["headers"] = dict(url.headers) #TODO: consider creating custom serializer for this
                 self.json_list.append(self._json.copy())
         # print(f"[{self.resp.status_code}] {hop + 1} URL: {self.resp.url}")
         self._json["hop"] = hop + 1
         self._json["url"] = str(self.resp.url)
-        # self._json["headers"] = self.resp.headers
+        self._json["statusCode"] = [
+            {
+                "code": self.resp.status_code,
+                "phrase": responses[int(self.resp.status_code)],
+            }
+        ]
+        self._json["headers"] = dict(self.resp.headers)
         self.json_list.append(self._json)
 
 
