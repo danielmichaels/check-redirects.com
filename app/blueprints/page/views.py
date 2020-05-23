@@ -9,14 +9,16 @@ page = Blueprint('page', __name__, template_folder='templates')
 @page.route('/', methods=['GET','POST'])
 def home():
     form = SearchForm()
+    response = None
 
     if form.validate_on_submit():
         url = form.search.data
         redirects = RedirectChecker(url)
         print(redirects.json_list)
-        return redirect(url_for('page.home'))
+        # todo: return json objects or json error
+        response = redirects.json_list
 
-    return render_template('page/home.html', form=form)
+    return render_template('page/home.html', form=form, response=response)
 
 
 @page.route('/terms')
