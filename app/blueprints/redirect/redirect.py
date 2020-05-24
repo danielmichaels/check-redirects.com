@@ -25,7 +25,16 @@ class RedirectChecker:
         except AttributeError as e:
             self.json_list.append({"error": "Invalid URL, or No Response Received"})
         except NetworkError as e:
-            self.json_list.append({"error": f"Could not resolve URL => '{self.url}'"})
+            self.json_list.append(
+                {
+                    "error": [
+                        {
+                            "reason": f"Could not resolve URL => '{self.url}'",
+                            "url": f"{self.url}",
+                        },
+                    ]
+                }
+            )
 
     def _resp(self):
 
