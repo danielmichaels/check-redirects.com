@@ -38,6 +38,7 @@ class RedirectChecker:
     def __init__(self, url):
         self.url = url
         self.resp = None
+        self.hop = 0
         self._json = {}
         self.response_information = []
         self.run()
@@ -89,57 +90,35 @@ class RedirectChecker:
         error = ResponseError(error=ErrorReasons(reason=reason, url=url))
         self.response_information.append(error)
 
+    def _response_info_loader(self, resp_type=None):
+        self.hop += 1
+        if resp_type is None:
+            resp_type = self.resp
+        else:
+            resp_type = resp_type
+        resp_obj = Response(
+            id=self.hop,
+            hop=self.hop,
+            url=str(resp_type.url),
+            http_version=resp_type.http_version,
+            status_code=StatusResponse(
+                code=resp_type.status_code, phrase=responses[int(resp_type.status_code)]
+            ),
+            headers=dict(resp_type.headers)
+        )
+        self.response_information.append(resp_obj)
+
     def path_taken(self):
-        hop = 0
         if self.resp.history:
             for url in self.resp.history:
-                hop += 1
-                response_data = Response(
-                    id=hop,
-                    hop=hop,
-                    url=str(url.url),
-                    http_version=url.http_version,
-                    status_code=StatusResponse(
-                        code=url.status_code, phrase=responses[int(url.status_code)]
-                    ),
-                    headers=dict(url.headers),
-                )
-
-                self.response_information.append(response_data)
-            hop += 1
-            response_data = Response(
-                id=hop,
-                hop=hop,
-                url=str(self.resp.url),
-                http_version=self.resp.http_version,
-                status_code=StatusResponse(
-                    code=self.resp.status_code,
-                    phrase=responses[int(self.resp.status_code)],
-                ),
-                headers=dict(self.resp.headers),
-            )
-
-            self.response_information.append(response_data)
+                self._response_info_loader(url)
+            self._response_info_loader(self.resp)
         else:
-            hop = 1
-            response_data = Response(
-                id=hop,
-                hop=hop,
-                url=str(self.resp.url),
-                http_version=self.resp.http_version,
-                status_code=StatusResponse(
-                    code=self.resp.status_code,
-                    phrase=responses[int(self.resp.status_code)],
-                ),
-                headers=dict(self.resp.headers),
-            )
-
-            self.response_information.append(response_data)
-
+            self._response_info_loader(self.resp)
 
 # r = RedirectChecker("hi")
-r = RedirectChecker("http://httpbin.org/")
-# r = RedirectChecker("https://httpbin.org/redirect/2")
+# r = RedirectChecker("http://httpbin.org/")
+r = RedirectChecker("https://httpbin.org/redirect/2")
 # print(r.response_information.error)
 for resp in r.response_information:
     print(resp)
