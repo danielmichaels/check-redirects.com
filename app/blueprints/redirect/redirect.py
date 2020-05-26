@@ -76,6 +76,19 @@ class RedirectChecker:
             return f"http://{self.url}"
         return self.url
 
+    def _error(self, reason: str, url: str = None):
+        """
+        Error handling that bundles errors into pydantic classes and returns
+        response_information as a json like response.
+        """
+        if url is None:
+            url = self.url
+        else:
+            url = url
+
+        error = ResponseError(error=ErrorReasons(reason=reason, url=url))
+        self.response_information.append(error)
+
     def path_taken(self):
         hop = 0
         if self.resp.history:
