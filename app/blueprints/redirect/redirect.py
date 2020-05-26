@@ -1,8 +1,33 @@
 import re
 from http.client import responses
+from typing import Dict
 
 import httpx
 from httpx import TimeoutException, InvalidURL, NetworkError
+from pydantic import BaseModel
+
+
+class ErrorReasons(BaseModel):
+    reason: str
+    url: str
+
+
+class ResponseError(BaseModel):
+    error: ErrorReasons
+
+
+class StatusResponse(BaseModel):
+    code: str
+    phrase: str
+
+
+class Response(BaseModel):
+    id: int
+    hop: int
+    url: str
+    http_version: str
+    status_code: StatusResponse
+    headers: Dict
 
 
 class RedirectChecker:
@@ -14,39 +39,33 @@ class RedirectChecker:
         self.url = url
         self.resp = None
         self._json = {}
-        self.json_list = []
+        self.response_information = []
         self.run()
 
     def run(self):
         try:
             self._resp()
             self.path_taken()
-            return self.json_list
+            return self.response_information
         except AttributeError as e:
-            self.json_list.append({"error": "Invalid URL, or No Response Received"})
+            # TODO log e
+            self._error("Invalid URL, or No Response Received.")
         except NetworkError as e:
-            self.json_list.append(
-                {
-                    "error": [
-                        {
-                            "reason": f"Could not resolve URL => '{self.url}'",
-                            "url": f"{self.url}",
-                        },
-                    ]
-                }
-            )
+            # TODO log e
+            self._error(reason="The URL could not be resolved.")
 
     def _resp(self):
 
         with httpx.Client() as client:
             try:
-                resp = client.get(self._http(), allow_redirects=True, timeout=5.1)
+                resp = client.get(self._http(), allow_redirects=True)
                 self.resp = resp
             except TimeoutException as e:
-                self.json_list.append({"error": "URL Timed Out"})
+                # TODO log e
+                self._error("URL Response Timed Out.")
             except InvalidURL as e:
-                self.json_list.append({"error": "Invalid URL Entered"})
-                # log this though
+                # TODO log e
+                self._error("Invalid URL, or No Response Received.")
 
     def _http(self):
         """
@@ -62,31 +81,53 @@ class RedirectChecker:
         if self.resp.history:
             for url in self.resp.history:
                 hop += 1
-                self._json["hop"] = hop
-                self._json["url"] = str(url.url)
-                self._json["httpVersion"] = url.http_version
-                self._json["statusCode"] = [
-                    {
-                        "code": url.status_code,
-                        "phrase": responses[int(url.status_code)],
-                    }
-                ]
-                self._json["headers"] = dict(url.headers)
-                self.json_list.append(self._json.copy())
-        self._json["hop"] = hop + 1
-        self._json["url"] = str(self.resp.url)
-        self._json["httpVersion"] = self.resp.http_version
-        self._json["statusCode"] = [
-            {
-                "code": self.resp.status_code,
-                "phrase": responses[int(self.resp.status_code)],
-            }
-        ]
-        self._json["headers"] = dict(self.resp.headers)
-        self.json_list.append(self._json)
+                response_data = Response(
+                    id=hop,
+                    hop=hop,
+                    url=str(url.url),
+                    http_version=url.http_version,
+                    status_code=StatusResponse(
+                        code=url.status_code, phrase=responses[int(url.status_code)]
+                    ),
+                    headers=dict(url.headers),
+                )
+
+                self.response_information.append(response_data)
+            hop += 1
+            response_data = Response(
+                id=hop,
+                hop=hop,
+                url=str(self.resp.url),
+                http_version=self.resp.http_version,
+                status_code=StatusResponse(
+                    code=self.resp.status_code,
+                    phrase=responses[int(self.resp.status_code)],
+                ),
+                headers=dict(self.resp.headers),
+            )
+
+            self.response_information.append(response_data)
+        else:
+            hop = 1
+            response_data = Response(
+                id=hop,
+                hop=hop,
+                url=str(self.resp.url),
+                http_version=self.resp.http_version,
+                status_code=StatusResponse(
+                    code=self.resp.status_code,
+                    phrase=responses[int(self.resp.status_code)],
+                ),
+                headers=dict(self.resp.headers),
+            )
+
+            self.response_information.append(response_data)
 
 
-r = RedirectChecker("hi")
-# r = RedirectChecker("http://httpbin.org/redirect/2")
+# r = RedirectChecker("hi")
+r = RedirectChecker("http://httpbin.org/")
 # r = RedirectChecker("https://httpbin.org/redirect/2")
-print(r.json_list)
+# print(r.response_information.error)
+for resp in r.response_information:
+    print(resp)
+# print(r.response_information.error)
