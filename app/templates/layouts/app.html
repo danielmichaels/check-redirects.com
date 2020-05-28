@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% block header %}
-  <nav class="navbar navbar-expand-md navbar-light bg-light mb-5">
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container">
       <a href="{{ url_for('page.home') }}">
           {{ config.get('SITE_NAME') | title }}

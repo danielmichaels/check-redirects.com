@@ -35,6 +35,7 @@
 
 
 {# Render a form group with errors for various field types. #}
+{# adding css can be done "inline" using 'css_class'#}
 {%- macro form_group(f, css_class='') -%}
   {% if f.errors %}
     {% set css_class = css_class + ' is-invalid ' + kwargs.pop('class', '') %}
@@ -64,7 +65,7 @@
   </form>
 {%- endmacro -%}
 
-
+{## TODO: remove this#}
 {# Render a form for searching. #}
 {%- macro search(endpoint) -%}
   {% call form_tag(endpoint, method='get') %}

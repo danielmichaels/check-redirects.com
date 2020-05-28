@@ -1,7 +1,6 @@
 {% extends 'layouts/app.html' %}
 {% import 'macros/items.html' as items %}
 {% import 'macros/form.html' as f with context %}
-{% import 'macros/user.html' as account %}
 
 {% block title %}Admin - Users / List{% endblock %}
 
@@ -85,16 +84,6 @@
                             data-datetime="{{ user.last_sign_in_on }}">
                         {{ user.last_sign_in_on }}
                       </time>
-                    {% endif %}
-                    {% if user.last_bet_on %}
-                      <br/>
-                      <span class="text-muted">
-                        Latest bet:
-                        <time class="js-from-now"
-                              data-datetime="{{ user.last_bet_on }}">
-                          {{ user.last_bet_on }}
-                        </time>
-                      </span>
                     {% endif %}
                   </td>
                   <td>{{ user.sign_in_count }}</td>

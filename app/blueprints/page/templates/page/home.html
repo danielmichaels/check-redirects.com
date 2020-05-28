@@ -1,10 +1,131 @@
 {% extends 'layouts/app.html' %}
+{% import 'macros/form.html' as f with context %}
 
-{% block title %} {{  config['SITE_NAME'] }}{% endblock %}
+{% block title %} {{ config['SITE_NAME'] }}{% endblock %}
 {% block meta_description %}  {% endblock %}
 
 {% block body %}
-  <div class="container">
+    <div class="container-fluid masthead">
+        <h1>
+            Check Redirects
+        </h1>
+        <div class="container">
+            {% call f.form_tag('page.home') %}
+                {% call f.form_group(form.search, placeholder='Enter the URL', css_class="text-center") %}
+                {% endcall %}
+                <small id="checkUrlMuted" class="form-text text-muted">
+                    Please enter a URL containing a valid protocol and Top
+                    Level Domain such as http://example.com
+                </small><br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            {% endcall %}
+        </div>
+    </div>
 
-  </div>
+    <div class="container">
+        {% if response == None %}
+            <!-- intentionally left blank -->
+        {% else %}
+            {% for resp in response %}
+                {% if resp.error %}
+                    <div class="card text-center border-light">
+                        <div class="card card-title">
+
+                            <h4>{{ resp.error.reason }}</h4>
+                            <button class="btn btn-primary" type="button"
+                                    data-toggle="collapse"
+                                    data-target="#errorReasons"
+                                    aria-expanded="false"
+                                    aria-controls="errorReasons">Possible
+                                Causes
+                            </button>
+
+                            <div class="collapse" id="errorReasons">
+                                <div class="card card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">Is the URL
+                                            entered correctly?
+                                        </li>
+                                        <li class="list-group-item">Does this
+                                            address live inside a Local Area
+                                            Network?
+                                        </li>
+                                        <li class="list-group-item">Are their
+                                            proxies, or firewalls prevent
+                                            access to this site?
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif response| length == 1 %}
+                    <div class="container">
+                    <div class="card text-center">
+                        <div class="card-body">
+{#                            <h5 class="card-title">Final URL</h5>#}
+                            <h5 class="card-title"><span class="font-weight-bold">[{{ resp.status_code.code }}] </span><a href="{{ response[-1].url }}"
+                                                      class="card-link"
+                                                      target="_blank">{{ response[-1].url }}</a>
+                            </h5>
+                            <div class="card-body">No redirects were found.</div>
+                            <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>
+                        </div>
+                    </div>
+                {% else %}
+{#                    <div class="container">#}
+{#                    <div class="card text-center">#}
+{#                        <div class="card-body">#}
+{#                            <h5 class="card-title">Final URL</h5>#}
+{#                            <h5 class="card-title"><a href="{{ response[-1].url }}"#}
+{#                                                      class="card-link"#}
+{#                                                      target="_blank">{{ response[-1].url }}</a>#}
+{#                            </h5>#}
+{#                            <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    </div>#}
+                    <div class="container">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="{{ resp.url }}"
+                                                          class="card-link"
+                                                          target="_blank">{{ resp.url }}</a>
+                                </h5>
+                                <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>
+
+                                <button type="button" class="btn btn-info"
+                                        data-toggle="collapse"
+                                        data-target="#headers-{{ resp.hop }}">
+                                    Header
+                                    Information
+                                </button>
+                                <div id="headers-{{ resp.hop }}"
+                                     class="collapse align-items-center">
+                                    <small class="text-left">
+                            <pre style="line-height: 100%; overflow: visible;"><code>
+                                    {{ resp.http_version }} {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                {% for k,v in resp.headers.items() %}
+                                    {{ k | title }}: {{ v }}
+                                {% endfor %}
+
+                            </code></pre>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+    </div>
+    <script>
+        let resp = '{{ response | safe | tojson }}';
+        console.log(`resp = ${resp}`)
+        let jsonObject = JSON.parse(resp);
+        console.log(`json: ${jsonObject}`);
+
+    </script>
 {% endblock %}
