@@ -28,6 +28,9 @@ class Response(BaseModel):
     http_version: str
     status_code: StatusResponse
     headers: Dict
+    host: str
+    path: str
+    scheme: str
 
 
 class RedirectChecker:
@@ -104,7 +107,10 @@ class RedirectChecker:
             status_code=StatusResponse(
                 code=resp_type.status_code, phrase=responses[int(resp_type.status_code)]
             ),
-            headers=dict(resp_type.headers)
+            host=resp_type.url.authority,
+            scheme=resp_type.url.scheme,
+            path=resp_type.url.path,
+            headers=dict(resp_type.headers),
         )
         self.response_information.append(resp_obj)
 
@@ -116,9 +122,10 @@ class RedirectChecker:
         else:
             self._response_info_loader(self.resp)
 
-# r = RedirectChecker("hi")
-# r = RedirectChecker("http://httpbin.org/")
-r = RedirectChecker("https://httpbin.org/redirect/2")
+
+# r = RedirectChecker("hi") # ERROR
+# r = RedirectChecker("http://httpbin.org/") # DIRECT
+r = RedirectChecker("https://httpbin.org/redirect/2")  # REDIRECTS
 # print(r.response_information.error)
 for resp in r.response_information:
     print(resp)
