@@ -2,12 +2,17 @@
 {% import 'macros/form.html' as f with context %}
 
 {% block title %} {{ config['SITE_NAME'] }}{% endblock %}
-{% block meta_description %}  {% endblock %}
+{% block meta_description %} Check your shortened links redirect routes with ease.
+Ensure ad-links go where you think they are going. Bypass corporate firewall link blockers
+and get those shortened URL's directly.
+{% endblock %}
 
 {% block body %}
     <div class="container-fluid masthead">
         <h1>
-            Check Redirects
+            Check Redirects<span>
+            <h5><small>Get redirect routes at your fingertips</small></h5>
+            </span>
         </h1>
         <div class="container">
             {% call f.form_tag('page.home') %}
@@ -88,7 +93,7 @@
                             <td scope="row">
                                 <button type="button"
                                         class="btn btn-success">
-                                    {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                    {{ resp.status_code.code }}
                                 </button>
                             </td>
                             <td>{{ resp.scheme }}</td>
@@ -107,12 +112,12 @@
                                 {% if resp.status_code.code == '200' %}
                                     <button type="button"
                                             class="btn btn-success">
-                                        {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                        {{ resp.status_code.code }}
                                     </button>
                                 {% else %}
                                     <button type="button"
                                             class="btn btn-info">
-                                        {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                        {{ resp.status_code.code }}
                                     </button>
                                 {% endif %}
                             <td>{{ resp.scheme }}</td>
