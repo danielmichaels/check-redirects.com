@@ -4,7 +4,8 @@
   <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class="container">
       <a href="{{ url_for('page.home') }}">
-          {{ config.get('SITE_NAME') | title }}
+          <img src="{{ static_url_for('static', filename='images/logo.png') }}"
+               alt="check-redirects corporate logo" width="70" height="40">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse"
               data-target="#navbarCollapse"
