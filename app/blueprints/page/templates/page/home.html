@@ -24,115 +24,209 @@
     </div>
 
     <div class="container">
-        {% if response == None %}
-            <!-- intentionally left blank -->
-        {% elif response[-1].error %}
-            <div class="card text-center border-light">
-                <div class="card card-title">
+    {% if response == None %}
+        <!-- intentionally left blank -->
+    {% elif response[-1].error %}
+        <div class="card text-center border-light">
+            <div class="card card-title">
 
-                    <h4>{{ response[-1].error.reason }}</h4>
-                    <button class="btn btn-primary" type="button"
-                            data-toggle="collapse"
-                            data-target="#errorReasons"
-                            aria-expanded="false"
-                            aria-controls="errorReasons">Possible
-                        Causes
-                    </button>
+                <h4>{{ response[-1].error.reason }}</h4>
+                <button class="btn btn-primary" type="button"
+                        data-toggle="collapse"
+                        data-target="#errorReasons"
+                        aria-expanded="false"
+                        aria-controls="errorReasons">Possible
+                    Causes
+                </button>
 
-                    <div class="collapse" id="errorReasons">
-                        <div class="card card-body">
-                            <ul class="list-group">
-                                <li class="list-group-item">Is the URL
-                                    entered correctly?
-                                </li>
-                                <li class="list-group-item">Does this
-                                    address live inside a Local Area
-                                    Network?
-                                </li>
-                                <li class="list-group-item">Are their
-                                    proxies, or firewalls prevent
-                                    access to this site?
-                                </li>
-                            </ul>
-                        </div>
+                <div class="collapse" id="errorReasons">
+                    <div class="card card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">Is the URL
+                                entered correctly?
+                            </li>
+                            <li class="list-group-item">Does this
+                                address live inside a Local Area
+                                Network?
+                            </li>
+                            <li class="list-group-item">Are their
+                                proxies, or firewalls prevent
+                                access to this site?
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        {% else %}
+        </div>
+    {% else %}
 
-            <div class="container mb-3">
-                <h3 class="text-center">Final Redirect</h3>
-                <small class="text-muted" style="text-align: center">
-                    Click the button to be taken to the site.
-                </small>
-                <a href="{{ response[-1].url }}" role="button"
-                   class="btn btn-primary btn-lg btn-block" target="_blank">
-                    {{ response[-1].url }}
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead class="thead-dark">
-                    <caption>Final Destination's
-                        IP: {{ response[-1].ipaddr }}</caption>
-                    <tr>
-                        <th>Status</th>
-                        <th>Scheme</th>
-                        <th>Host</th>
-                        <th>Path</th>
-                        <th>Link</th>
-                    <tbody>
-                    {% for resp in response %}
-                        {% if response| length == 1 %}
-                            <tr>
-                                <td scope="row">
+        <div class="container mb-3">
+            <h3 class="text-center">Final Redirect</h3>
+            <small class="text-muted" style="text-align: center">
+                Click the button to be taken to the site.
+            </small>
+            <a href="{{ response[-1].url }}" role="button"
+               class="btn btn-primary btn-lg btn-block" target="_blank">
+                {{ response[-1].url }}
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                <caption>Final Destination's
+                    IP: {{ response[-1].ipaddr }}</caption>
+                <tr>
+                    <th>Status</th>
+                    <th>Scheme</th>
+                    <th>Host</th>
+                    <th>Path</th>
+                    <th>Link</th>
+                <tbody>
+                {% for resp in response %}
+                    {% if response| length == 1 %}
+                        <tr>
+                            <td scope="row">
+                                <button type="button"
+                                        class="btn btn-success">
+                                    {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                </button>
+                            </td>
+                            <td>{{ resp.scheme }}</td>
+                            <td>{{ resp.host }}</td>
+                            <td>{{ resp.path }}</td>
+                            <td>
+                                <button type="button" class="btn btn-link">
+                                    <a href="{{ resp.url }}"
+                                       target="_blank">Link</a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row">
+                                {% if resp.status_code.code == '200' %}
                                     <button type="button"
                                             class="btn btn-success">
                                         {{ resp.status_code.code }} {{ resp.status_code.phrase }}
                                     </button>
-                                </td>
-                                <td>{{ resp.scheme }}</td>
-                                <td>{{ resp.host }}</td>
-                                <td>{{ resp.path }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-link">
-                                        <a href="{{ resp.url }}"
-                                           target="_blank">Link</a>
+                                {% else %}
+                                    <button type="button"
+                                            class="btn btn-info">
+                                        {{ resp.status_code.code }} {{ resp.status_code.phrase }}
                                     </button>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <th scope="row">
-                                    {% if resp.status_code.code == '200' %}
-                                        <button type="button"
-                                                class="btn btn-success">
-                                            {{ resp.status_code.code }} {{ resp.status_code.phrase }}
-                                        </button>
-                                    {% else %}
-                                        <button type="button"
-                                                class="btn btn-info">
-                                            {{ resp.status_code.code }} {{ resp.status_code.phrase }}
-                                        </button>
-                                    {% endif %}
-                                <td>{{ resp.scheme }}</td>
-                                <td>{{ resp.host }}</td>
-                                <td>{{ resp.path }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-link">
-                                        <a href="{{ resp.url }}"
-                                           target="_blank">Link</a>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
+                                {% endif %}
+                            <td>{{ resp.scheme }}</td>
+                            <td>{{ resp.host }}</td>
+                            <td>{{ resp.path }}</td>
+                            <td>
+                                <button type="button" class="btn btn-link">
+                                    <a href="{{ resp.url }}"
+                                       target="_blank">Link</a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
 
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% if response == None %}
+        <!-- intentionally left blank -->
+    {% elif response[-1].error %}
+        <!-- intentionally left blank -->
+    {% elif response != None %}
+        <p>
+            <button class="btn btn-primary" type="button"
+                    data-toggle="collapse"
+                    data-target="#summary"
+                    aria-expanded="false"
+                    aria-controls="summary">
+                Redirect Summary
+            </button>
+        </p>
+        {% for resp in response %}
+            <div class="collapse" id="summary">
+            {% if resp.status_code.code == '200' %}
+                <div class="card card-body mb-1 border-success">
+                    <h4 class="card-title text-left">Hop:
+                        <b>{{ resp.url }}</b>
+                    </h4>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="mb-0"><small>Status Code</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.status_code.code }}
+                                </button>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="mb-0"><small>Status Message</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.status_code.phrase }}
+                                </button>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="mb-0"><small>Request Latency</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.time_elapsed }}ms
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        {% for k,v in resp.headers.items() %}
+                            <p class="mb-0 text-muted">
+                                <small>{{ k | title }}</small></p>
+                            <p class="mb-0"><em>{{ v }}</em></p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="card card-body mb-1 border-info">
+                    <h4 class="card-title text-left">Hop:
+                        <b>{{ resp.url }}</b>
+                    </h4>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-4">
+                                <p class="mb-0"><small>Status Code</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.status_code.code }}
+                                </button>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="mb-0"><small>Status Message</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.status_code.phrase }}
+                                </button>
+                            </div>
+
+                            <div class="col-4">
+                                <p class="mb-0"><small>Request Latency</small></p>
+                                <button type="button" class="btn btn-info">
+                                    {{ resp.time_elapsed }}ms
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% for k,v in resp.headers.items() %}
+                            <p class="mb-0 text-muted">
+                                <small>{{ k | title }}</small></p>
+                            <p class="mb-0"><em>{{ v }}</em></p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
-
+    {% endif %}
 {% endblock %}
 
