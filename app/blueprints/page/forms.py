@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length, URL
 
 class SearchForm(FlaskForm):
     search = StringField(
-        "Enter a URL to check",
+        "",
         [
             DataRequired(),
             Length(3, 512),

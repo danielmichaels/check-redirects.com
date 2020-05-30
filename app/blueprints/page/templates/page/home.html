@@ -32,10 +32,9 @@ and get those shortened URL's directly.
     {% if response == None %}
         <!-- intentionally left blank -->
     {% elif response[-1].error %}
-        <div class="card text-center border-light">
+        <h4 class="text-center">Error: {{ response[-1].error.reason }}</h4>
+        <div class="card text-center border-light mt-3">
             <div class="card card-title">
-
-                <h4>{{ response[-1].error.reason }}</h4>
                 <button class="btn btn-primary" type="button"
                         data-toggle="collapse"
                         data-target="#errorReasons"
@@ -47,16 +46,15 @@ and get those shortened URL's directly.
                 <div class="collapse" id="errorReasons">
                     <div class="card card-body">
                         <ul class="list-group">
-                            <li class="list-group-item">Is the URL
-                                entered correctly?
+                            <li class="list-group-item">
+                                Incorrect URL
                             </li>
-                            <li class="list-group-item">Does this
-                                address live inside a Local Area
-                                Network?
+                            <li class="list-group-item">
+                                URL resides within private address space, or is
+                                being served locally
                             </li>
-                            <li class="list-group-item">Are their
-                                proxies, or firewalls prevent
-                                access to this site?
+                            <li class="list-group-item">
+                                Firewall or proxy settings exist preventing URL resolution
                             </li>
                         </ul>
                     </div>
