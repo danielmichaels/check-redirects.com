@@ -149,8 +149,8 @@
         {% for resp in response %}
             <div class="collapse" id="summary">
             {% if resp.status_code.code == '200' %}
-                <div class="card card-body mb-1 border-success">
-                    <h4 class="card-title text-left">Hop:
+                <div class="card card-body mb-3 border-success">
+                    <h4 class="card-title text-left">Final Response:
                         <b>{{ resp.url }}</b>
                     </h4>
 
@@ -158,21 +158,21 @@
                         <div class="row">
                             <div class="col-4">
                                 <p class="mb-0"><small>Status Code</small></p>
-                                <button type="button" class="btn btn-info">
+                                <button type="button" class="btn btn-success">
                                     {{ resp.status_code.code }}
                                 </button>
                             </div>
 
                             <div class="col-4">
                                 <p class="mb-0"><small>Status Message</small></p>
-                                <button type="button" class="btn btn-info">
+                                <button type="button" class="btn btn-success">
                                     {{ resp.status_code.phrase }}
                                 </button>
                             </div>
 
                             <div class="col-4">
                                 <p class="mb-0"><small>Request Latency</small></p>
-                                <button type="button" class="btn btn-info">
+                                <button type="button" class="btn btn-success">
                                     {{ resp.time_elapsed }}ms
                                 </button>
                             </div>
@@ -188,8 +188,8 @@
                     </div>
                 </div>
             {% else %}
-                <div class="card card-body mb-1 border-info">
-                    <h4 class="card-title text-left">Hop:
+                <div class="card card-body mb-3 border-info">
+                    <h4 class="card-title text-left">Response {{ resp.hop }}:
                         <b>{{ resp.url }}</b>
                     </h4>
                     <div class="container">
