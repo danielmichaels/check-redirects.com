@@ -13,12 +13,12 @@
             {% call f.form_tag('page.home') %}
                 {% call f.form_group(form.search, placeholder='Enter the URL', css_class="text-center") %}
                 {% endcall %}
-                <small id="checkUrlMuted" class="form-text text-muted">
+                <small class="form-text text-muted">
                     Please enter a URL containing a valid protocol and Top
                     Level Domain such as http://example.com
-                </small><br>
+                </small>
+                <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
             {% endcall %}
         </div>
     </div>
@@ -26,106 +26,113 @@
     <div class="container">
         {% if response == None %}
             <!-- intentionally left blank -->
+        {% elif response[-1].error %}
+            <div class="card text-center border-light">
+                <div class="card card-title">
+
+                    <h4>{{ response[-1].error.reason }}</h4>
+                    <button class="btn btn-primary" type="button"
+                            data-toggle="collapse"
+                            data-target="#errorReasons"
+                            aria-expanded="false"
+                            aria-controls="errorReasons">Possible
+                        Causes
+                    </button>
+
+                    <div class="collapse" id="errorReasons">
+                        <div class="card card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">Is the URL
+                                    entered correctly?
+                                </li>
+                                <li class="list-group-item">Does this
+                                    address live inside a Local Area
+                                    Network?
+                                </li>
+                                <li class="list-group-item">Are their
+                                    proxies, or firewalls prevent
+                                    access to this site?
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            {% for resp in response %}
-                {% if resp.error %}
-                    <div class="card text-center border-light">
-                        <div class="card card-title">
 
-                            <h4>{{ resp.error.reason }}</h4>
-                            <button class="btn btn-primary" type="button"
-                                    data-toggle="collapse"
-                                    data-target="#errorReasons"
-                                    aria-expanded="false"
-                                    aria-controls="errorReasons">Possible
-                                Causes
-                            </button>
+            <div class="container mb-3">
+                <h3 class="text-center">Final Redirect</h3>
+                <small class="text-muted" style="text-align: center">
+                    Click the button to be taken to the site.
+                </small>
+                <a href="{{ response[-1].url }}" role="button"
+                   class="btn btn-primary btn-lg btn-block" target="_blank">
+                    {{ response[-1].url }}
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <caption>Final Destination's
+                        IP: {{ response[-1].ipaddr }}</caption>
+                    <tr>
+                        <th>Status</th>
+                        <th>Scheme</th>
+                        <th>Host</th>
+                        <th>Path</th>
+                        <th>Link</th>
+                    <tbody>
+                    {% for resp in response %}
+                        {% if response| length == 1 %}
+                            <tr>
+                                <td scope="row">
+                                    <button type="button"
+                                            class="btn btn-success">
+                                        {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                    </button>
+                                </td>
+                                <td>{{ resp.scheme }}</td>
+                                <td>{{ resp.host }}</td>
+                                <td>{{ resp.path }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-link">
+                                        <a href="{{ resp.url }}"
+                                           target="_blank">Link</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <th scope="row">
+                                    {% if resp.status_code.code == '200' %}
+                                        <button type="button"
+                                                class="btn btn-success">
+                                            {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                        </button>
+                                    {% else %}
+                                        <button type="button"
+                                                class="btn btn-info">
+                                            {{ resp.status_code.code }} {{ resp.status_code.phrase }}
+                                        </button>
+                                    {% endif %}
+                                <td>{{ resp.scheme }}</td>
+                                <td>{{ resp.host }}</td>
+                                <td>{{ resp.path }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-link">
+                                        <a href="{{ resp.url }}"
+                                           target="_blank">Link</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
 
-                            <div class="collapse" id="errorReasons">
-                                <div class="card card-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Is the URL
-                                            entered correctly?
-                                        </li>
-                                        <li class="list-group-item">Does this
-                                            address live inside a Local Area
-                                            Network?
-                                        </li>
-                                        <li class="list-group-item">Are their
-                                            proxies, or firewalls prevent
-                                            access to this site?
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% elif response| length == 1 %}
-                    <div class="container">
-                    <div class="card text-center">
-                        <div class="card-body">
-{#                            <h5 class="card-title">Final URL</h5>#}
-                            <h5 class="card-title"><span class="font-weight-bold">[{{ resp.status_code.code }}] </span><a href="{{ response[-1].url }}"
-                                                      class="card-link"
-                                                      target="_blank">{{ response[-1].url }}</a>
-                            </h5>
-                            <div class="card-body">No redirects were found.</div>
-                            <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>
-                        </div>
-                    </div>
-                {% else %}
-{#                    <div class="container">#}
-{#                    <div class="card text-center">#}
-{#                        <div class="card-body">#}
-{#                            <h5 class="card-title">Final URL</h5>#}
-{#                            <h5 class="card-title"><a href="{{ response[-1].url }}"#}
-{#                                                      class="card-link"#}
-{#                                                      target="_blank">{{ response[-1].url }}</a>#}
-{#                            </h5>#}
-{#                            <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    </div>#}
-                    <div class="container">
-                        <div class="card text-center">
-                            <div class="card-body">
-                                <h5 class="card-title"><a href="{{ resp.url }}"
-                                                          class="card-link"
-                                                          target="_blank">{{ resp.url }}</a>
-                                </h5>
-                                <div class="card-subtitle">{{ resp.status_code.code }} {{ resp.status_code.phrase }}</div>
-
-                                <button type="button" class="btn btn-info"
-                                        data-toggle="collapse"
-                                        data-target="#headers-{{ resp.hop }}">
-                                    Header
-                                    Information
-                                </button>
-                                <div id="headers-{{ resp.hop }}"
-                                     class="collapse align-items-center">
-                                    <small class="text-left">
-                            <pre style="line-height: 100%; overflow: visible;"><code>
-                                    {{ resp.http_version }} {{ resp.status_code.code }} {{ resp.status_code.phrase }}
-                                {% for k,v in resp.headers.items() %}
-                                    {{ k | title }}: {{ v }}
-                                {% endfor %}
-
-                            </code></pre>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endif %}
-
     </div>
-    <script>
-        let resp = '{{ response | safe | tojson }}';
-        console.log(`resp = ${resp}`)
-        let jsonObject = JSON.parse(resp);
-        console.log(`json: ${jsonObject}`);
 
-    </script>
 {% endblock %}
+
