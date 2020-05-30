@@ -1,4 +1,5 @@
 import re
+import socket
 from http.client import responses
 from typing import Dict
 
@@ -31,6 +32,7 @@ class Response(BaseModel):
     host: str
     path: str
     scheme: str
+    ipaddr: str
 
 
 class RedirectChecker:
@@ -93,6 +95,14 @@ class RedirectChecker:
         error = ResponseError(error=ErrorReasons(reason=reason, url=url))
         self.response_information.append(error)
 
+    @staticmethod
+    def _ipaddr(url):
+        try:
+            return socket.gethostbyname(url)
+        except Exception as e:
+            # log this
+            return "IP Could not be Resolved"
+
     def _response_info_loader(self, resp_type=None):
         self.hop += 1
         if resp_type is None:
@@ -110,6 +120,7 @@ class RedirectChecker:
             host=resp_type.url.authority,
             scheme=resp_type.url.scheme,
             path=resp_type.url.path,
+            ipaddr=self._ipaddr(resp_type.url.authority),
             headers=dict(resp_type.headers),
         )
         self.response_information.append(resp_obj)
