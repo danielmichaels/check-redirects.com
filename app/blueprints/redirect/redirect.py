@@ -1,3 +1,4 @@
+import logging
 import re
 import socket
 from http.client import responses
@@ -6,6 +7,10 @@ from typing import Dict
 import httpx
 from httpx import TimeoutException, InvalidURL, NetworkError
 from pydantic import BaseModel
+
+from lib.util_logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class ErrorReasons(BaseModel):
@@ -55,10 +60,12 @@ class RedirectChecker:
             self.path_taken()
             return self.response_information
         except AttributeError as e:
-            # TODO log e
-            self._error("Invalid URL, or No Response Received.")
+            logging.error(e)
+            self._error(reason="Invalid URL, or No Response Received.")
         except NetworkError as e:
-            # TODO log e
+            # generic error that captures URL's which do not exist
+            # set logger.error() to enable sentry to track this.
+            logger.info(e)
             self._error(reason="The URL could not be resolved.")
 
     def _resp(self):
@@ -68,10 +75,10 @@ class RedirectChecker:
                 resp = client.get(self._http(), allow_redirects=True)
                 self.resp = resp
             except TimeoutException as e:
-                # TODO log e
+                logger.error(e)
                 self._error("URL Response Timed Out.")
             except InvalidURL as e:
-                # TODO log e
+                logger.error(e)
                 self._error("Invalid URL, or No Response Received.")
 
     def _http(self):
@@ -126,6 +133,7 @@ class RedirectChecker:
             return socket.gethostbyname(url)
         except Exception as e:
             # log this
+            logger.error(e)
             return "IP Could not be Resolved"
 
     def _response_info_loader(self, resp_type=None):
@@ -142,8 +150,7 @@ class RedirectChecker:
             url=str(resp_type.url),
             http_version=resp_type.http_version,
             status_code=StatusResponse(
-                code=resp_type.status_code,
-                phrase=responses[int(resp_type.status_code)]
+                code=resp_type.status_code, phrase=responses[int(resp_type.status_code)]
             ),
             host=resp_type.url.authority,
             scheme=resp_type.url.scheme,
@@ -163,9 +170,9 @@ class RedirectChecker:
             self._response_info_loader(self.resp)
 
 
-# r = RedirectChecker("hi") # ERROR
+r = RedirectChecker("hi")  # ERROR
 # r = RedirectChecker("http://httpbin.org/") # DIRECT
-r = RedirectChecker("https://httpbin.org/redirect/2")  # REDIRECTS
+# r = RedirectChecker("https://httpbin.org/redirect/2")  # REDIRECTS
 # print(r.response_information.error)
 for resp in r.response_information:
     print(resp)

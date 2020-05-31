@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template
 
 from app.blueprints.page.forms import SearchForm
 from app.blueprints.redirect.redirect import RedirectChecker
@@ -14,7 +14,6 @@ def home():
     if form.validate_on_submit():
         url = form.search.data
         redirects = RedirectChecker(url)
-        # todo: return json objects or json error
         response = redirects.response_information
 
     return render_template("page/home.html", form=form, response=response)
