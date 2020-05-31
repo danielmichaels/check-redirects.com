@@ -63,7 +63,9 @@ class RedirectChecker:
             logging.error(e)
             self._error(reason="Invalid URL, or No Response Received.")
         except NetworkError as e:
-            logger.error(e)
+            # generic error that captures URL's which do not exist
+            # set logger.error() to enable sentry to track this.
+            logger.info(e)
             self._error(reason="The URL could not be resolved.")
 
     def _resp(self):
@@ -148,8 +150,7 @@ class RedirectChecker:
             url=str(resp_type.url),
             http_version=resp_type.http_version,
             status_code=StatusResponse(
-                code=resp_type.status_code,
-                phrase=responses[int(resp_type.status_code)]
+                code=resp_type.status_code, phrase=responses[int(resp_type.status_code)]
             ),
             host=resp_type.url.authority,
             scheme=resp_type.url.scheme,

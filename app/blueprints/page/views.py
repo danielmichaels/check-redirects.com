@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, url_for, redirect
+from flask import Blueprint, render_template
 
 from app.blueprints.page.forms import SearchForm
 from app.blueprints.redirect.redirect import RedirectChecker

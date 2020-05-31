@@ -33,8 +33,12 @@ from lib.template_processors import format_currency, current_year
 
 sentry_sdk.init(
     dsn=SENTRY_DSN,
-    integrations=[FlaskIntegration(), CeleryIntegration(), RedisIntegration(),
-                  SqlalchemyIntegration()],
+    integrations=[
+        FlaskIntegration(),
+        CeleryIntegration(),
+        RedisIntegration(),
+        SqlalchemyIntegration(),
+    ],
 )
 
 CELERY_TASK_LIST = [
