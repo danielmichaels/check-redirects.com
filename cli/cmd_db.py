@@ -1,12 +1,12 @@
 import click
-
 from flask import current_app
 from flask.cli import with_appcontext
-
 from sqlalchemy_utils import database_exists, create_database
 
 from app.extensions import db as db_ext
-from app.blueprints.user.models import User
+
+
+# from app.blueprints.user.models import User
 
 
 @click.group()
@@ -49,8 +49,8 @@ def seed():
     """
     app_config = current_app.config
 
-    if User.find_by_identity(app_config['SEED_ADMIN_EMAIL']) is not None:
-        return None
+    # if User.find_by_identity(app_config['SEED_ADMIN_EMAIL']) is not None:
+    #     return None
 
     params = {
         'role': 'admin',
@@ -58,7 +58,7 @@ def seed():
         'password': app_config['SEED_ADMIN_PASSWORD']
     }
 
-    return User(**params).save()
+    # return User(**params).save()
 
 
 @db.command()

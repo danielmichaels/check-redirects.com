@@ -1,14 +1,12 @@
-import click
 import random
-
 from datetime import datetime
 
+import click
+from faker import Faker
 from flask import current_app
 from flask.cli import with_appcontext
-from faker import Faker
 
 from app.extensions import db
-from app.blueprints.user.models import User
 
 fake = Faker()
 
@@ -121,7 +119,7 @@ def users():
             'role': role,
             'email': email,
             'username': username,
-            'password': User.encrypt_password('password'),
+            # 'password': User.encrypt_password('password'),
             'sign_in_count': random.random() * 100,
             'coins': 100,
             'last_bet_on': last_bet_on,
@@ -132,15 +130,15 @@ def users():
         }
 
         # Ensure the seeded admin is always an admin with the seeded password.
-        if email == app_config['SEED_ADMIN_EMAIL']:
-            password = User.encrypt_password(app_config['SEED_ADMIN_PASSWORD'])
+        # if email == app_config['SEED_ADMIN_EMAIL']:
+        #     password = User.encrypt_password(app_config['SEED_ADMIN_PASSWORD'])
 
-            params['role'] = 'admin'
-            params['password'] = password
+            # params['role'] = 'admin'
+            # params['password'] = password
 
-        data.append(params)
+        # data.append(params)
 
-    return _bulk_insert(User, data, 'users')
+    # return _bulk_insert(User, data, 'users')
 
 
 

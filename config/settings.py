@@ -31,19 +31,9 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_REDIS_MAX_CONNECTIONS = 5
-# CELERYBEAT_SCHEDULE = {
-#     'mark-soon-to-expire-credit-cards': {
-#         'task': 'app.blueprints.billing.tasks.mark_old_credit_cards',
-#         'schedule': crontab(hour=0, minute=0)
-#     },
-#     'expire-old-coupons': {
-#         'task': 'app.blueprints.billing.tasks.expire_old_coupons',
-#         'schedule': crontab(hour=0, minute=1)
-#     },
-# }
+
 
 # Flask-Mail.
-# MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
 MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.sendgrid.net")
 MAIL_PORT = os.getenv("MAIL_PORT", 587)
 MAIL_USE_TLS = bool(strtobool(os.getenv("MAIL_USE_TLS", "true")))
