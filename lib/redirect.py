@@ -111,7 +111,6 @@ class RedirectChecker:
         :returns: integer that represents milliseconds
         """
         return int(resp.elapsed.total_seconds() * 1000)
-        # return int(resp.elapsed * 1000)
 
     @staticmethod
     def _total_time_elapsed(resp):
@@ -132,7 +131,6 @@ class RedirectChecker:
         try:
             return socket.gethostbyname(url)
         except Exception as e:
-            # log this
             logger.error(e)
             return "IP Could not be Resolved"
 
@@ -143,7 +141,6 @@ class RedirectChecker:
         else:
             resp_type = resp_type
 
-        print(self._time_converter(resp_type))
         resp_obj = Response(
             id=self.hop,
             hop=self.hop,
@@ -170,10 +167,10 @@ class RedirectChecker:
             self._response_info_loader(self.resp)
 
 
-r = RedirectChecker("hi")  # ERROR
+# r = RedirectChecker("hi")  # ERROR
 # r = RedirectChecker("http://httpbin.org/") # DIRECT
 # r = RedirectChecker("https://httpbin.org/redirect/2")  # REDIRECTS
 # print(r.response_information.error)
-for resp in r.response_information:
-    print(resp)
+# for resp in r.response_information:
+#     print(resp)
 # print(r.response_information.error)
