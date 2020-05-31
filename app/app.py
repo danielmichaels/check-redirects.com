@@ -1,18 +1,20 @@
 import logging
-
 from logging.handlers import SMTPHandler
 
-from werkzeug.middleware.proxy_fix import ProxyFix
-from werkzeug.debug import DebuggedApplication
+import sentry_sdk
+from celery import Celery
 from flask import Flask, render_template, request
 from flask_login import current_user
-from celery import Celery
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.flask import FlaskIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+from werkzeug.debug import DebuggedApplication
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-from cli import register_cli_commands
-from lib.template_processors import format_currency, current_year
 from app.blueprints.admin import admin
-from app.blueprints.page import page
 from app.blueprints.contact import contact
+from app.blueprints.page import page
 from app.blueprints.user import user
 from app.blueprints.user.models import User
 from app.extensions import (
@@ -23,12 +25,21 @@ from app.extensions import (
     login_manager,
     limiter,
     babel,
-    flask_static_digest
+    flask_static_digest,
+)
+from cli import register_cli_commands
+from config.settings import SENTRY_DSN
+from lib.template_processors import format_currency, current_year
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    integrations=[FlaskIntegration(), CeleryIntegration(), RedisIntegration(),
+                  SqlalchemyIntegration()],
 )
 
 CELERY_TASK_LIST = [
-    'app.blueprints.contact.tasks',
-    'app.blueprints.user.tasks',
+    "app.blueprints.contact.tasks",
+    "app.blueprints.user.tasks",
 ]
 
 
@@ -42,8 +53,11 @@ def create_celery_app(app=None):
     """
     app = app or create_app()
 
-    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'],
-                    include=CELERY_TASK_LIST)
+    celery = Celery(
+        app.import_name,
+        broker=app.config["CELERY_BROKER_URL"],
+        include=CELERY_TASK_LIST,
+    )
     celery.conf.update(app.config)
     TaskBase = celery.Task
 
@@ -65,9 +79,9 @@ def create_app(settings_override=None):
     :param settings_override: Override settings
     :return: Flask app
     """
-    app = Flask(__name__, static_folder='../public', static_url_path='')
+    app = Flask(__name__, static_folder="../public", static_url_path="")
 
-    app.config.from_object('config.settings')
+    app.config.from_object("config.settings")
 
     if settings_override:
         app.config.update(settings_override)
@@ -117,7 +131,7 @@ def template_processors(app):
     :param app: Flask application instance
     :return: App jinja environment
     """
-    app.jinja_env.filters['format_currency'] = format_currency
+    app.jinja_env.filters["format_currency"] = format_currency
     app.jinja_env.globals.update(current_year=current_year)
 
     return app.jinja_env
@@ -132,14 +146,14 @@ def authentication(app, user_model):
     :type user_model: SQLAlchemy model
     :return: None
     """
-    login_manager.login_view = 'user.login'
+    login_manager.login_view = "user.login"
 
     @login_manager.user_loader
     def load_user(uid):
         user = user_model.query.get(uid)
 
         if not user.is_active():
-            login_manager.login_message = 'This account has been disabled.'
+            login_manager.login_message = "This account has been disabled."
             return None
 
         return user
@@ -153,12 +167,13 @@ def locale(app):
     :return: str
     """
     if babel.locale_selector_func is None:
+
         @babel.localeselector
         def get_locale():
             if current_user.is_authenticated:
                 return current_user.locale
 
-            accept_languages = app.config.get('LANGUAGES').keys()
+            accept_languages = app.config.get("LANGUAGES").keys()
             return request.accept_languages.best_match(accept_languages)
 
 
@@ -194,8 +209,8 @@ def error_templates(app):
          """
         # Get the status code from the status, default to a 500 so that we
         # catch all types of errors and treat them as a 500.
-        code = getattr(status, 'code', 500)
-        return render_template('errors/{0}.html'.format(code)), code
+        code = getattr(status, "code", 500)
+        return render_template("errors/{0}.html".format(code)), code
 
     for error in [404, 429, 500]:
         app.errorhandler(error)(render_status)
@@ -210,17 +225,19 @@ def exception_handler(app):
     :param app: Flask application instance
     :return: None
     """
-    mail_handler = SMTPHandler((app.config.get('MAIL_SERVER'),
-                                app.config.get('MAIL_PORT')),
-                               app.config.get('MAIL_USERNAME'),
-                               [app.config.get('MAIL_USERNAME')],
-                               '[Exception handler] A 5xx was thrown',
-                               (app.config.get('MAIL_USERNAME'),
-                                app.config.get('MAIL_PASSWORD')),
-                               secure=())
+    mail_handler = SMTPHandler(
+        (app.config.get("MAIL_SERVER"), app.config.get("MAIL_PORT")),
+        app.config.get("MAIL_USERNAME"),
+        [app.config.get("MAIL_USERNAME")],
+        "[Exception handler] A 5xx was thrown",
+        (app.config.get("MAIL_USERNAME"), app.config.get("MAIL_PASSWORD")),
+        secure=(),
+    )
 
     mail_handler.setLevel(logging.ERROR)
-    mail_handler.setFormatter(logging.Formatter("""
+    mail_handler.setFormatter(
+        logging.Formatter(
+            """
     Time:               %(asctime)s
     Message type:       %(levelname)s
 
@@ -228,7 +245,9 @@ def exception_handler(app):
     Message:
 
     %(message)s
-    """))
+    """
+        )
+    )
     app.logger.addHandler(mail_handler)
 
     return None
