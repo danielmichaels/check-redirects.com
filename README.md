@@ -17,16 +17,14 @@ Else, `webpack` won't build.
 docker-compose down -v # -v removes volumes
 docker-compose build --no-cache # start fresh
 docker-compose up 
-docker-compose exec web flask db reset --with-testdb # must do
-docker-compose exec web flask babel
+#docker-compose exec web flask db reset --with-testdb # no db at this stage
 
 # The following are helper scripts but not needed to start the app
-docker-compose exec web flask add all
-docker-compose exec web flask flake8
-docker-compose exec web flask test
-docker-compose exec web flask cov
-docker-compose exec web flask loc
-docker-compose exec web flask secret
-#docker-compose exec web flask stripe sync-plans # no longer needed but kept for reference
+#docker-compose exec web flask add all # no db at this stage
+docker-compose exec web flask flake8 # flake8 assessment
+docker-compose exec web flask test # pytest suite
+docker-compose exec web flask cov # coverage output
+docker-compose exec web flask loc # lines of code output
+docker-compose exec web flask secret # generate random string
 ```
 

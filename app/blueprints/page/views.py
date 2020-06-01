@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 
 from app.blueprints.page.forms import SearchForm
-from app.blueprints.redirect.redirect import RedirectChecker
+from lib.redirect import RedirectChecker
 
 page = Blueprint("page", __name__, template_folder="templates")
 

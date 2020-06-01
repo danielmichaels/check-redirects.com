@@ -12,11 +12,8 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from werkzeug.debug import DebuggedApplication
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-from app.blueprints.admin import admin
 from app.blueprints.contact import contact
 from app.blueprints.page import page
-from app.blueprints.user import user
-from app.blueprints.user.models import User
 from app.extensions import (
     debug_toolbar,
     mail,
@@ -43,7 +40,6 @@ sentry_sdk.init(
 
 CELERY_TASK_LIST = [
     "app.blueprints.contact.tasks",
-    "app.blueprints.user.tasks",
 ]
 
 
@@ -93,13 +89,10 @@ def create_app(settings_override=None):
     middleware(app)
     error_templates(app)
     exception_handler(app)
-    app.register_blueprint(admin)
     app.register_blueprint(page)
     app.register_blueprint(contact)
-    app.register_blueprint(user)
     template_processors(app)
     extensions(app)
-    authentication(app, User)
     locale(app)
     register_cli_commands(app)
 
@@ -139,28 +132,6 @@ def template_processors(app):
     app.jinja_env.globals.update(current_year=current_year)
 
     return app.jinja_env
-
-
-def authentication(app, user_model):
-    """
-    Initialize the Flask-Login extension (mutates the app passed in).
-
-    :param app: Flask application instance
-    :param user_model: Model that contains the authentication information
-    :type user_model: SQLAlchemy model
-    :return: None
-    """
-    login_manager.login_view = "user.login"
-
-    @login_manager.user_loader
-    def load_user(uid):
-        user = user_model.query.get(uid)
-
-        if not user.is_active():
-            login_manager.login_message = "This account has been disabled."
-            return None
-
-        return user
 
 
 def locale(app):
