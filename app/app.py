@@ -40,7 +40,6 @@ sentry_sdk.init(
 
 CELERY_TASK_LIST = [
     "app.blueprints.contact.tasks",
-    "app.blueprints.user.tasks",
 ]
 
 
@@ -94,7 +93,6 @@ def create_app(settings_override=None):
     app.register_blueprint(contact)
     template_processors(app)
     extensions(app)
-    # authentication(app, User)
     locale(app)
     register_cli_commands(app)
 
