@@ -1,15 +1,8 @@
-import datetime
-import json
-
 import pytest
-import pytz
-from mock import Mock
 
-from config import settings
 from app.app import create_app
-from lib.util_datetime import timedelta_months
 from app.extensions import db as _db
-from app.blueprints.user.models import User
+from config import settings
 
 
 @pytest.yield_fixture(scope='session')
@@ -69,9 +62,9 @@ def db(app):
         'coins': 100
     }
 
-    admin = User(**params)
+    # admin = User(**params)
 
-    _db.session.add(admin)
+    # _db.session.add(admin)
     _db.session.commit()
 
     return _db

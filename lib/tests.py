@@ -29,21 +29,21 @@ class ViewTestMixin(object):
         self.session = session
         self.client = client
 
-    def login(self, identity='admin@local.host', password='password'):
-        """
-        Login a specific user.
-
-        :return: Flask response
-        """
-        return login(self.client, identity, password)
-
-    def logout(self):
-        """
-        Logout a specific user.
-
-        :return: Flask response
-        """
-        return logout(self.client)
+    # def login(self, identity='admin@local.host', password='password'):
+    #     """
+    #     Login a specific user.
+    #
+    #     :return: Flask response
+    #     """
+    #     return login(self.client, identity, password)
+    #
+    # def logout(self):
+    #     """
+    #     Logout a specific user.
+    #
+    #     :return: Flask response
+    #     """
+    #     return logout(self.client)
 
 
 def login(client, username='', password=''):
