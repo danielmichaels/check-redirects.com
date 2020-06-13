@@ -1,3 +1,4 @@
+""" Test suite. """
 import pytest
 from flask import url_for
 
@@ -29,24 +30,24 @@ class ViewTestMixin(object):
         self.session = session
         self.client = client
 
-    def login(self, identity='admin@local.host', password='password'):
-        """
-        Login a specific user.
+    # def login(self, identity='admin@local.host', password='password'):
+    #     """
+    #     Login a specific user.
+    #
+    #     :return: Flask response
+    #     """
+    #     return login(self.client, identity, password)
+    #
+    # def logout(self):
+    #     """
+    #     Logout a specific user.
+    #
+    #     :return: Flask response
+    #     """
+    #     return logout(self.client)
 
-        :return: Flask response
-        """
-        return login(self.client, identity, password)
 
-    def logout(self):
-        """
-        Logout a specific user.
-
-        :return: Flask response
-        """
-        return logout(self.client)
-
-
-def login(client, username='', password=''):
+def login(client, username="", password=""):
     """
     Log a specific user in.
 
@@ -59,8 +60,7 @@ def login(client, username='', password=''):
     """
     user = dict(identity=username, password=password)
 
-    response = client.post(url_for('user.login'), data=user,
-                           follow_redirects=True)
+    response = client.post(url_for("user.login"), data=user, follow_redirects=True)
 
     return response
 
@@ -72,4 +72,4 @@ def logout(client):
     :param client: Flask client
     :return: Flask response
     """
-    return client.get(url_for('user.logout'), follow_redirects=True)
+    return client.get(url_for("user.logout"), follow_redirects=True)

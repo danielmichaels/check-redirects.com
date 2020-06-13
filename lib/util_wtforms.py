@@ -1,3 +1,4 @@
+""" Form Utilities. """
 from flask_wtf import FlaskForm
 from wtforms_alchemy import model_form_factory
 
@@ -10,6 +11,7 @@ class ModelForm(BaseModelForm):
     """
     Allow WTForms-Alchemy to work with Flask-WTF.
     """
+
     @classmethod
     def get_session(self):
         return db.session
@@ -41,7 +43,7 @@ def choices_from_dict(source, prepend_blank=True):
     choices = []
 
     if prepend_blank:
-        choices.append(('', 'Please select one...'))
+        choices.append(("", "Please select one..."))
 
     for key, value in source.items():
         pair = (key, value)
@@ -76,7 +78,7 @@ def choices_from_list(source, prepend_blank=True):
     choices = []
 
     if prepend_blank:
-        choices.append(('', 'Please select one...'))
+        choices.append(("", "Please select one..."))
 
     for item in source:
         pair = (item, item)

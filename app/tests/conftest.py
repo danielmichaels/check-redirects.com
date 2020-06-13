@@ -1,30 +1,23 @@
-import datetime
-import json
-
 import pytest
-import pytz
-from mock import Mock
 
-from config import settings
 from app.app import create_app
-from lib.util_datetime import timedelta_months
 from app.extensions import db as _db
-from app.blueprints.user.models import User
+from config import settings
 
 
-@pytest.yield_fixture(scope='session')
+@pytest.yield_fixture(scope="session")
 def app():
     """
     Setup our flask test app, this only gets executed once.
 
     :return: Flask app
     """
-    db_uri = '{0}_test'.format(settings.SQLALCHEMY_DATABASE_URI)
+    db_uri = "{0}_test".format(settings.SQLALCHEMY_DATABASE_URI)
     params = {
-        'DEBUG': False,
-        'TESTING': True,
-        'WTF_CSRF_ENABLED': False,
-        'SQLALCHEMY_DATABASE_URI': db_uri
+        "DEBUG": True,
+        "TESTING": True,
+        "WTF_CSRF_ENABLED": False,
+        "SQLALCHEMY_DATABASE_URI": db_uri,
     }
 
     _app = create_app(settings_override=params)
@@ -38,7 +31,7 @@ def app():
     ctx.pop()
 
 
-@pytest.yield_fixture(scope='function')
+@pytest.yield_fixture(scope="function")
 def client(app):
     """
     Setup an app client, this gets executed for each test function.
@@ -49,7 +42,7 @@ def client(app):
     yield app.test_client()
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def db(app):
     """
     Setup our database, this only gets executed once per session.
@@ -63,21 +56,21 @@ def db(app):
     # Create a single user because a lot of tests do not mutate this user.
     # It will result in faster tests.
     params = {
-        'role': 'admin',
-        'email': 'admin@local.host',
-        'password': 'password',
-        'coins': 100
+        "role": "admin",
+        "email": "admin@local.host",
+        "password": "password",
+        "coins": 100,
     }
 
-    admin = User(**params)
+    # admin = User(**params)
 
-    _db.session.add(admin)
+    # _db.session.add(admin)
     _db.session.commit()
 
     return _db
 
 
-@pytest.yield_fixture(scope='function')
+@pytest.yield_fixture(scope="function")
 def session(db):
     """
     Allow very fast tests by using rollbacks and nested sessions. This does
@@ -96,44 +89,45 @@ def session(db):
     db.session.rollback()
 
 
-@pytest.fixture(scope='session')
-def token(db):
-    """
-    Serialize a JWS token.
+#
+# @pytest.fixture(scope='session')
+# def token(db):
+#     """
+#     Serialize a JWS token.
+#
+#     :param db: Pytest fixture
+#     :return: JWS token
+#     """
+#     user = User.find_by_identity('admin@local.host')
+#     return user.serialize_token()
 
-    :param db: Pytest fixture
-    :return: JWS token
-    """
-    user = User.find_by_identity('admin@local.host')
-    return user.serialize_token()
-
-
-@pytest.fixture(scope='function')
-def users(db):
-    """
-    Create user fixtures. They reset per test.
-
-    :param db: Pytest fixture
-    :return: SQLAlchemy database session
-    """
-    db.session.query(User).delete()
-
-    users = [
-        {
-            'role': 'admin',
-            'email': 'admin@local.host',
-            'password': 'password'
-        },
-        {
-            'active': False,
-            'email': 'disabled@local.host',
-            'password': 'password'
-        }
-    ]
-
-    for user in users:
-        db.session.add(User(**user))
-
-    db.session.commit()
-
-    return db
+#
+# @pytest.fixture(scope='function')
+# def users(db):
+#     """
+#     Create user fixtures. They reset per test.
+#
+#     :param db: Pytest fixture
+#     :return: SQLAlchemy database session
+#     """
+#     db.session.query(User).delete()
+#
+#     users = [
+#         {
+#             'role': 'admin',
+#             'email': 'admin@local.host',
+#             'password': 'password'
+#         },
+#         {
+#             'active': False,
+#             'email': 'disabled@local.host',
+#             'password': 'password'
+#         }
+#     ]
+#
+#     for user in users:
+#         db.session.add(User(**user))
+#
+#     db.session.commit()
+#
+#     return db

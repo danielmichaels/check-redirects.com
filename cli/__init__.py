@@ -1,3 +1,4 @@
+""" Register cli commands. """
 import importlib
 import os
 
@@ -10,9 +11,7 @@ def register_cli_commands(app):
     :return: None
     """
     for filename in os.listdir(os.path.dirname(__file__)):
-        if filename.endswith('.py') and filename.startswith('cmd_'):
-            module = importlib.import_module(f'cli.{filename[:-3]}')
+        if filename.endswith(".py") and filename.startswith("cmd_"):
+            module = importlib.import_module(f"cli.{filename[:-3]}")
             cmd = getattr(module, filename[4:-3])
             app.cli.add_command(cmd)
-
-    return None

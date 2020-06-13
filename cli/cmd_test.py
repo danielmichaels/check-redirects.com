@@ -2,12 +2,11 @@ import os
 import subprocess
 
 import click
-
 from flask.cli import with_appcontext
 
 
 @click.command()
-@click.argument('path', default=os.path.join('app', 'tests'))
+@click.argument("path", default=os.path.join("app", "tests"))
 @with_appcontext
 def test(path):
     """
@@ -16,5 +15,5 @@ def test(path):
     :param path: Test path
     :return: Subprocess call result
     """
-    cmd = 'py.test {0}'.format(path)
+    cmd = "py.test {0} -v".format(path)
     return subprocess.call(cmd, shell=True)

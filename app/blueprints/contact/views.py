@@ -1,18 +1,13 @@
-from flask import (
-    Blueprint,
-    flash,
-    redirect,
-    request,
-    url_for,
-    render_template)
+""" Contact blueprint. """
+from flask import Blueprint, flash, redirect, request, url_for, render_template
 from flask_login import current_user
 
 from app.blueprints.contact.forms import ContactForm
 
-contact = Blueprint('contact', __name__, template_folder='templates')
+contact = Blueprint("contact", __name__, template_folder="templates")
 
 
-@contact.route('/contact', methods=['GET', 'POST'])
+@contact.route("/contact", methods=["GET", "POST"])
 def index():
     # Pre-populate the email field if the user is signed in.
     form = ContactForm(obj=current_user)
@@ -21,10 +16,11 @@ def index():
         # This prevents circular imports.
         from app.blueprints.contact.tasks import deliver_contact_email
 
-        deliver_contact_email.delay(request.form.get('email'),
-                                    request.form.get('message'))
+        deliver_contact_email.delay(
+            request.form.get("email"), request.form.get("message")
+        )
 
-        flash('Thanks, expect a response shortly.', 'success')
-        return redirect(url_for('contact.index'))
+        flash("Thanks, expect a response shortly.", "success")
+        return redirect(url_for("contact.index"))
 
-    return render_template('contact/index.html', form=form)
+    return render_template("contact/index.html", form=form)

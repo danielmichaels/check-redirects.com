@@ -1,14 +1,13 @@
+""" Bable utility. """
 import os
 import subprocess
 
 import click
-
 from flask.cli import with_appcontext
 
-
-APP_NAME = 'app'
-BABEL_I18N_PATH = os.path.join(APP_NAME, 'translations')
-MESSAGES_PATH = os.path.join(APP_NAME, 'translations', 'messages.pot')
+APP_NAME = "app"
+BABEL_I18N_PATH = os.path.join(APP_NAME, "translations")
+MESSAGES_PATH = os.path.join(APP_NAME, "translations", "messages.pot")
 
 
 @click.group()
@@ -25,13 +24,14 @@ def extract():
 
     :return: Subprocess call result
     """
-    babel_cmd = 'pybabel extract -F babel.cfg -k lazy_gettext ' \
-                '-o {0} {1}'.format(MESSAGES_PATH, APP_NAME)
+    babel_cmd = "pybabel extract -F babel.cfg -k lazy_gettext " "-o {0} {1}".format(
+        MESSAGES_PATH, APP_NAME
+    )
     return subprocess.call(babel_cmd, shell=True)
 
 
 @babel.command()
-@click.option('--language', default=None, help='The output language, ex. de')
+@click.option("--language", default=None, help="The output language, ex. de")
 @with_appcontext
 def init(language=None):
     """
@@ -39,9 +39,9 @@ def init(language=None):
 
     :return: Subprocess call result
     """
-    babel_cmd = 'pybabel init -i {0} -d {1} -l {2}'.format(MESSAGES_PATH,
-                                                           BABEL_I18N_PATH,
-                                                           language)
+    babel_cmd = "pybabel init -i {0} -d {1} -l {2}".format(
+        MESSAGES_PATH, BABEL_I18N_PATH, language
+    )
     return subprocess.call(babel_cmd, shell=True)
 
 
@@ -53,7 +53,7 @@ def compile():
 
     :return: Subprocess call result
     """
-    babel_cmd = 'pybabel compile -d {0}'.format(BABEL_I18N_PATH)
+    babel_cmd = "pybabel compile -d {0}".format(BABEL_I18N_PATH)
     return subprocess.call(babel_cmd, shell=True)
 
 
@@ -65,6 +65,5 @@ def update():
 
     :return: Subprocess call result
     """
-    babel_cmd = 'pybabel update -i {0} -d {1}'.format(MESSAGES_PATH,
-                                                      BABEL_I18N_PATH)
+    babel_cmd = "pybabel update -i {0} -d {1}".format(MESSAGES_PATH, BABEL_I18N_PATH)
     return subprocess.call(babel_cmd, shell=True)

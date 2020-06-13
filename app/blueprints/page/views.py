@@ -1,3 +1,4 @@
+""" Page blueprint. """
 from flask import Blueprint, render_template
 
 from app.blueprints.page.forms import SearchForm
@@ -8,6 +9,7 @@ page = Blueprint("page", __name__, template_folder="templates")
 
 @page.route("/", methods=["GET", "POST"])
 def home():
+    """ Landing page. """
     form = SearchForm()
     response = None
 
@@ -21,9 +23,11 @@ def home():
 
 @page.route("/terms")
 def terms():
+    """ Terms of Service page. """
     return render_template("page/terms.html")
 
 
 @page.route("/privacy")
 def privacy():
+    """ Privacy Policy page."""
     return render_template("page/privacy.html")
