@@ -1,7 +1,6 @@
 from subprocess import check_output
 
 import click
-
 from flask.cli import with_appcontext
 
 
@@ -20,7 +19,7 @@ def count_locs(file_type, comment_pattern):
 
     cmd = "{0} | xargs -0 sed {1} | wc -l".format(find, sed_pattern)
 
-    return check_output(cmd, shell=True).decode('utf-8').replace('\n', '')
+    return check_output(cmd, shell=True).decode("utf-8").replace("\n", "")
 
 
 @click.command()
@@ -32,16 +31,17 @@ def loc():
     :return: None
     """
     file_types = (
-        ['Python', 'py', '#'],
-        ['HTML', 'html', '<!--'],
-        ['CSS', 'css', r'\/\*'],
-        ['JS', 'js', r'\/\/']
+        ["Python", "py", "#"],
+        ["HTML", "html", "<!--"],
+        ["CSS", "css", r"\/\*"],
+        ["JS", "js", r"\/\/"],
     )
 
-    click.echo('Lines of code\n-------------')
+    click.echo("Lines of code\n-------------")
 
     for file_type in file_types:
-        click.echo("{0}: {1}".format(file_type[0], count_locs(file_type[1],
-                                                              file_type[2])))
+        click.echo(
+            "{0}: {1}".format(file_type[0], count_locs(file_type[1], file_type[2]))
+        )
 
     return None

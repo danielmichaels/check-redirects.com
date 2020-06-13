@@ -7,7 +7,8 @@ from logging.handlers import TimedRotatingFileHandler
 
 LOG_FILE = f"{os.getenv('SITE_NAME', 'my-app')}.log"
 FORMAT = logging.Formatter(
-    "%(asctime)s:%(name)s:%(levelname)s:%(funcName)s:%(lineno)d:%(message)s")
+    "%(asctime)s:%(name)s:%(levelname)s:%(funcName)s:%(lineno)d:%(message)s"
+)
 
 
 def console_handler():
@@ -27,7 +28,7 @@ def file_handler():
 
     :return: file handler
     """
-    handler = TimedRotatingFileHandler(LOG_FILE, interval=10, when='D')
+    handler = TimedRotatingFileHandler(LOG_FILE, interval=10, when="D")
     handler.setFormatter(FORMAT)
     return handler
 

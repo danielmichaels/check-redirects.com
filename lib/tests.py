@@ -47,7 +47,7 @@ class ViewTestMixin(object):
     #     return logout(self.client)
 
 
-def login(client, username='', password=''):
+def login(client, username="", password=""):
     """
     Log a specific user in.
 
@@ -60,8 +60,7 @@ def login(client, username='', password=''):
     """
     user = dict(identity=username, password=password)
 
-    response = client.post(url_for('user.login'), data=user,
-                           follow_redirects=True)
+    response = client.post(url_for("user.login"), data=user, follow_redirects=True)
 
     return response
 
@@ -73,4 +72,4 @@ def logout(client):
     :param client: Flask client
     :return: Flask response
     """
-    return client.get(url_for('user.logout'), follow_redirects=True)
+    return client.get(url_for("user.logout"), follow_redirects=True)

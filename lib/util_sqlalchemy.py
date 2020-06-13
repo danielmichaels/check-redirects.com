@@ -15,24 +15,24 @@ class AwareDateTime(TypeDecorator):
     Source:
       https://gist.github.com/inklesspen/90b554c864b99340747e
     """
+
     impl = DateTime(timezone=True)
 
     def process_bind_param(self, value, dialect):
         if isinstance(value, datetime.datetime) and value.tzinfo is None:
-            raise ValueError('{!r} must be TZ-aware'.format(value))
+            raise ValueError("{!r} must be TZ-aware".format(value))
         return value
 
     def __repr__(self):
-        return 'AwareDateTime()'
+        return "AwareDateTime()"
 
 
 class ResourceMixin(object):
     # Keep track when records are created and updated.
-    created_on = db.Column(AwareDateTime(),
-                           default=tzware_datetime)
-    updated_on = db.Column(AwareDateTime(),
-                           default=tzware_datetime,
-                           onupdate=tzware_datetime)
+    created_on = db.Column(AwareDateTime(), default=tzware_datetime)
+    updated_on = db.Column(
+        AwareDateTime(), default=tzware_datetime, onupdate=tzware_datetime
+    )
 
     @classmethod
     def sort_by(cls, field, direction):
@@ -46,15 +46,15 @@ class ResourceMixin(object):
         :return: tuple
         """
         if field not in cls.__table__.columns:
-            field = 'created_on'
+            field = "created_on"
 
-        if direction not in ('asc', 'desc'):
-            direction = 'asc'
+        if direction not in ("asc", "desc"):
+            direction = "asc"
 
         return field, direction
 
     @classmethod
-    def get_bulk_action_ids(cls, scope, ids, omit_ids=[], query=''):
+    def get_bulk_action_ids(cls, scope, ids, omit_ids=[], query=""):
         """
         Determine which IDs are to be modified.
 
@@ -70,7 +70,7 @@ class ResourceMixin(object):
         """
         omit_ids = map(str, omit_ids)
 
-        if scope == 'all_search_results':
+        if scope == "all_search_results":
             # Change the scope to go from selected ids to all search results.
             ids = cls.query.with_entities(cls.id).filter(cls.search(query))
 
@@ -95,7 +95,8 @@ class ResourceMixin(object):
         :return: Number of deleted instances
         """
         delete_count = cls.query.filter(cls.id.in_(ids)).delete(
-            synchronize_session=False)
+            synchronize_session=False
+        )
         db.session.commit()
 
         return delete_count
@@ -129,5 +130,5 @@ class ResourceMixin(object):
         obj_id = hex(id(self))
         columns = self.__table__.c.keys()
 
-        values = ', '.join("%s=%r" % (n, getattr(self, n)) for n in columns)
-        return '<%s %s(%s)>' % (obj_id, self.__class__.__name__, values)
+        values = ", ".join("%s=%r" % (n, getattr(self, n)) for n in columns)
+        return "<%s %s(%s)>" % (obj_id, self.__class__.__name__, values)

@@ -23,7 +23,7 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # Get the SQLAlchemy database URI.
-config.set_main_option('sqlalchemy.url', app.config['SQLALCHEMY_DATABASE_URI'])
+config.set_main_option("sqlalchemy.url", app.config["SQLALCHEMY_DATABASE_URI"])
 
 # Required for --autogenerate to work so that Alembic can attempt to find
 # the difference between the current database and our models automatically.
@@ -40,8 +40,11 @@ def run_migrations_offline():
 
     Calls to context.execute() here emit the given string to the script output.
     """
-    context.configure(url=app.config['SQLALCHEMY_DATABASE_URI'],
-                      target_metadata=target_metadata, literal_binds=True)
+    context.configure(
+        url=app.config["SQLALCHEMY_DATABASE_URI"],
+        target_metadata=target_metadata,
+        literal_binds=True,
+    )
 
     with context.begin_transaction():
         context.run_migrations()
@@ -55,12 +58,15 @@ def run_migrations_online():
     with the context.
     """
     engine = engine_from_config(
-        config.get_section(config.config_ini_section), prefix='sqlalchemy.')
+        config.get_section(config.config_ini_section), prefix="sqlalchemy."
+    )
 
     with engine.connect() as connection:
         context.configure(
-            url=app.config['SQLALCHEMY_DATABASE_URI'],
-            connection=connection, target_metadata=target_metadata)
+            url=app.config["SQLALCHEMY_DATABASE_URI"],
+            connection=connection,
+            target_metadata=target_metadata,
+        )
 
         with context.begin_transaction():
             context.run_migrations()

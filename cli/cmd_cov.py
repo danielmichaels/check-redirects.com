@@ -1,12 +1,11 @@
 import subprocess
 
 import click
-
 from flask.cli import with_appcontext
 
 
 @click.command()
-@click.argument('path', default='app')
+@click.argument("path", default="app")
 @with_appcontext
 def cov(path):
     """
@@ -15,5 +14,5 @@ def cov(path):
     :param path: Test coverage path
     :return: Subprocess call result
     """
-    cmd = 'py.test --cov-report term-missing --cov {0}'.format(path)
+    cmd = "py.test --cov-report term-missing --cov {0}".format(path)
     return subprocess.call(cmd, shell=True)

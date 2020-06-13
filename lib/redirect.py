@@ -18,24 +18,28 @@ logger = get_logger(__name__)
 
 class ErrorReasons(BaseModel):  # pylint: disable=too-few-public-methods
     """ Error pydantic container. """
+
     reason: str
     url: str
 
 
 class ResponseError(BaseModel):  # pylint: disable=too-few-public-methods
     """ Error pydantic container. """
+
     reason: str
     error: ErrorReasons
 
 
-class StatusResponse(BaseModel): # pylint: disable=too-few-public-methods
+class StatusResponse(BaseModel):  # pylint: disable=too-few-public-methods
     """ Status pydantic container. """
+
     code: str
     phrase: str
 
 
-class Response(BaseModel): # pylint: disable=too-few-public-methods
+class Response(BaseModel):  # pylint: disable=too-few-public-methods
     """ Response pydantic container. """
+
     id: int
     hop: int
     url: str
