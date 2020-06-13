@@ -1,3 +1,4 @@
+""" DB cli. """
 import click
 from flask import current_app
 from flask.cli import with_appcontext
@@ -17,7 +18,8 @@ def db():
 
 @db.command()
 @click.option(
-    "--with-testdb/--no-with-testdb", default=False, help="Create a test db too?"
+    "--with-testdb/--no-with-testdb", default=False,
+    help="Create a test db too?"
 )
 @with_appcontext
 def init(with_testdb):
@@ -31,12 +33,11 @@ def init(with_testdb):
     db_ext.create_all()
 
     if with_testdb:
-        db_uri = "{0}_test".format(current_app.config["SQLALCHEMY_DATABASE_URI"])
+        db_uri = "{0}_test".format(
+            current_app.config["SQLALCHEMY_DATABASE_URI"])
 
         if not database_exists(db_uri):
             create_database(db_uri)
-
-    return None
 
 
 @db.command()
@@ -63,7 +64,8 @@ def seed():
 
 @db.command()
 @click.option(
-    "--with-testdb/--no-with-testdb", default=False, help="Create a test db too?"
+    "--with-testdb/--no-with-testdb", default=False,
+    help="Create a test db too?"
 )
 @click.pass_context
 @with_appcontext
@@ -76,5 +78,3 @@ def reset(ctx, with_testdb):
     """
     ctx.invoke(init, with_testdb=with_testdb)
     ctx.invoke(seed)
-
-    return None

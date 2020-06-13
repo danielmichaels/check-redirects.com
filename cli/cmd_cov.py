@@ -1,3 +1,4 @@
+""" Coverage cli. """
 import subprocess
 
 import click

@@ -23,8 +23,6 @@ def _log_status(count, model_label):
     """
     click.echo("Created {0} {1}".format(count, model_label))
 
-    return None
-
 
 @with_appcontext
 def _bulk_insert(model, data, label):
@@ -48,8 +46,6 @@ def _bulk_insert(model, data, label):
     db.engine.execute(model.__table__.insert(), data)
 
     _log_status(model.query.count(), label)
-
-    return None
 
 
 @click.group()
@@ -113,7 +109,8 @@ def users():
             start_date="-1y", end_date="now"
         ).strftime("%s")
 
-        current_sign_in_on = datetime.utcfromtimestamp(float(fake_datetime)).strftime(
+        current_sign_in_on = datetime.utcfromtimestamp(
+            float(fake_datetime)).strftime(
             "%Y-%m-%dT%H:%M:%S Z"
         )
 
@@ -156,5 +153,3 @@ def all(ctx):
     :return: None
     """
     ctx.invoke(users)
-
-    return None

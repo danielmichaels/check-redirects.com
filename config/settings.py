@@ -1,3 +1,4 @@
+""" Settings. """
 import os
 from datetime import timedelta
 from distutils.util import strtobool

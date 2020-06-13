@@ -1,10 +1,10 @@
+""" Flask App. """
 import logging
 from logging.handlers import SMTPHandler
 
 import sentry_sdk
 from celery import Celery
-from flask import Flask, render_template, request
-from flask_login import current_user
+from flask import Flask, render_template
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -60,7 +60,8 @@ def create_celery_app(app=None):
     celery.conf.update(app.config)
     TaskBase = celery.Task
 
-    class ContextTask(TaskBase):
+    class ContextTask(TaskBase):  # pylint: disable=too-few-public-methods
+        """ Create celery ctx base. """
         abstract = True
 
         def __call__(self, *args, **kwargs):
@@ -92,7 +93,6 @@ def create_app(settings_override=None):
     app.register_blueprint(contact)
     template_processors(app)
     extensions(app)
-    locale(app)
     register_cli_commands(app)
 
     if app.debug:
@@ -116,8 +116,6 @@ def extensions(app):
     babel.init_app(app)
     flask_static_digest.init_app(app)
 
-    return None
-
 
 def template_processors(app):
     """
@@ -131,24 +129,6 @@ def template_processors(app):
     return app.jinja_env
 
 
-def locale(app):
-    """
-    Initialize a locale for the current request.
-
-    :param app: Flask application instance
-    :return: str
-    """
-    if babel.locale_selector_func is None:
-
-        @babel.localeselector
-        def get_locale():
-            if current_user.is_authenticated:
-                return current_user.locale
-
-            accept_languages = app.config.get("LANGUAGES").keys()
-            return request.accept_languages.best_match(accept_languages)
-
-
 def middleware(app):
     """
     Register 0 or more middleware (mutates the app passed in).
@@ -158,8 +138,6 @@ def middleware(app):
     """
     # Swap request.remote_addr with the real IP address even if behind a proxy.
     app.wsgi_app = ProxyFix(app.wsgi_app)
-
-    return None
 
 
 def error_templates(app):
@@ -186,8 +164,6 @@ def error_templates(app):
 
     for error in [404, 429, 500]:
         app.errorhandler(error)(render_status)
-
-    return None
 
 
 def exception_handler(app):
@@ -221,5 +197,3 @@ def exception_handler(app):
         )
     )
     app.logger.addHandler(mail_handler)
-
-    return None

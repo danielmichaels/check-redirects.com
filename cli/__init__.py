@@ -1,3 +1,4 @@
+""" Register cli commands. """
 import importlib
 import os
 
@@ -14,5 +15,3 @@ def register_cli_commands(app):
             module = importlib.import_module(f"cli.{filename[:-3]}")
             cmd = getattr(module, filename[4:-3])
             app.cli.add_command(cmd)
-
-    return None

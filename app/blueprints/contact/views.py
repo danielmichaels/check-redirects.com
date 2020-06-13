@@ -1,3 +1,4 @@
+""" Contact blueprint. """
 from flask import Blueprint, flash, redirect, request, url_for, render_template
 from flask_login import current_user
 
