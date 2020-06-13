@@ -1,10 +1,11 @@
+""" SQLAlchemy utilities. """
 import datetime
 
 from sqlalchemy import DateTime
 from sqlalchemy.types import TypeDecorator
 
-from lib.util_datetime import tzware_datetime
 from app.extensions import db
+from lib.util_datetime import tzware_datetime
 
 
 class AwareDateTime(TypeDecorator):

@@ -1,3 +1,4 @@
+""" Flask Mail Plus - enhancing FlaskMail. """
 from flask import render_template
 
 from app.extensions import mail

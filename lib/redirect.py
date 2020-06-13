@@ -1,3 +1,6 @@
+"""
+Redirect core functionality.
+"""
 import logging
 import re
 import socket
@@ -5,7 +8,7 @@ from http.client import responses
 from typing import Dict
 
 import httpx
-from httpx import TimeoutException, InvalidURL, NetworkError
+from httpx import InvalidURL, NetworkError
 from pydantic import BaseModel
 
 from lib.util_logger import get_logger
@@ -13,21 +16,26 @@ from lib.util_logger import get_logger
 logger = get_logger(__name__)
 
 
-class ErrorReasons(BaseModel):
+class ErrorReasons(BaseModel):  # pylint: disable=too-few-public-methods
+    """ Error pydantic container. """
     reason: str
     url: str
 
 
-class ResponseError(BaseModel):
+class ResponseError(BaseModel):  # pylint: disable=too-few-public-methods
+    """ Error pydantic container. """
+    reason: str
     error: ErrorReasons
 
 
-class StatusResponse(BaseModel):
+class StatusResponse(BaseModel): # pylint: disable=too-few-public-methods
+    """ Status pydantic container. """
     code: str
     phrase: str
 
 
-class Response(BaseModel):
+class Response(BaseModel): # pylint: disable=too-few-public-methods
+    """ Response pydantic container. """
     id: int
     hop: int
     url: str
@@ -55,17 +63,20 @@ class RedirectChecker:
         self.run()
 
     def run(self):
+        """
+        entrypoint for redirect class.
+        """
         try:
             self._resp()
             self.path_taken()
             return self.response_information
-        except AttributeError as e:
-            logging.error(e)
+        except AttributeError as err:
+            logging.error(err)
             self._error(reason="Invalid URL, or No Response Received.")
-        except NetworkError as e:
+        except NetworkError as err:
             # generic error that captures URL's which do not exist
             # set logger.error() to enable sentry to track this.
-            logger.info(e)
+            logger.info(err)
             self._error(reason="The URL could not be resolved.")
 
     def _resp(self):
@@ -74,11 +85,8 @@ class RedirectChecker:
             try:
                 resp = client.get(self._http(), allow_redirects=True)
                 self.resp = resp
-            except TimeoutException as e:
-                logger.error(e)
-                self._error("URL Response Timed Out.")
-            except InvalidURL as e:
-                logger.error(e)
+            except InvalidURL as err:
+                logger.error(err)
                 self._error("Invalid URL, or No Response Received.")
 
     def _http(self):
@@ -97,8 +105,6 @@ class RedirectChecker:
         """
         if url is None:
             url = self.url
-        else:
-            url = url
 
         error = ResponseError(error=ErrorReasons(reason=reason, url=url))
         self.response_information.append(error)
@@ -121,8 +127,8 @@ class RedirectChecker:
         """
         total = []
         for redirects in resp.history:
-            tt = redirects.elapsed.total_seconds()
-            total.append(tt)
+            time_taken = redirects.elapsed.total_seconds()
+            total.append(time_taken)
         total.append(resp.elapsed.total_seconds())
         return int(sum(total) * 1000)
 
@@ -130,16 +136,18 @@ class RedirectChecker:
     def _ipaddr(url):
         try:
             return socket.gethostbyname(url)
-        except Exception as e:
-            logger.error(e)
+        except Exception as err:
+            logger.error(err)
             return "IP Could not be Resolved"
 
     def _response_info_loader(self, resp_type=None):
+        """
+        Loader class which places response information into relevant
+        pydantic containers.
+        """
         self.hop += 1
         if resp_type is None:
             resp_type = self.resp
-        else:
-            resp_type = resp_type
 
         resp_obj = Response(
             id=self.hop,
@@ -159,6 +167,12 @@ class RedirectChecker:
         self.response_information.append(resp_obj)
 
     def path_taken(self):
+        """
+        HTTPX returns the final response and a history dictionary. To extract
+        the hops before the final destination, the history objects must be looped
+        over in order to obtain each hop's data. Any data extracted is loaded
+        into a Response pydantic container.
+        """
         if self.resp.history:
             for url in self.resp.history:
                 self._response_info_loader(url)
@@ -170,7 +184,7 @@ class RedirectChecker:
 # r = RedirectChecker("hi")  # ERROR
 # r = RedirectChecker("http://httpbin.org/") # DIRECT
 # r = RedirectChecker("https://httpbin.org/redirect/2")  # REDIRECTS
-# print(r.response_information.error)
+# print(r.response_information)
 # for resp in r.response_information:
 #     print(resp)
 # print(r.response_information.error)

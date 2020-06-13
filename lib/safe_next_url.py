@@ -1,3 +1,4 @@
+""" Creates safe URL relative paths. """
 try:
     from urlparse import urljoin
 except ImportError:

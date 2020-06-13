@@ -1,3 +1,4 @@
+""" Global Logger Module. """
 import logging
 import os
 import sys
