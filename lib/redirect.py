@@ -26,7 +26,6 @@ class ErrorReasons(BaseModel):  # pylint: disable=too-few-public-methods
 class ResponseError(BaseModel):  # pylint: disable=too-few-public-methods
     """ Error pydantic container. """
 
-    reason: str
     error: ErrorReasons
 
 
@@ -91,7 +90,7 @@ class RedirectChecker:
                 self.resp = resp
             except InvalidURL as err:
                 logger.error(err)
-                self._error("Invalid URL, or No Response Received.")
+                self._error(reason="Invalid URL, or No Response Received.")
 
     def _http(self):
         """

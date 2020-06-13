@@ -10,7 +10,7 @@ class TestPage(ViewTestMixin):
         assert response.status_code == 200
         assert b"Check Redirects" in response.data
 
-    def test_home_page_search_url_not_exist(self):
+    def test_home_page_search_url_does_not_exist(self):
         """ Home page search for URL that does not exist. """
         form = {"search": "http://doesnotexist123fourfivesixe.com"}
 
