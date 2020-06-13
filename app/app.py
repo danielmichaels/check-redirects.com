@@ -19,14 +19,13 @@ from app.extensions import (
     mail,
     csrf,
     db,
-    login_manager,
     limiter,
     babel,
     flask_static_digest,
 )
 from cli import register_cli_commands
 from config.settings import SENTRY_DSN
-from lib.template_processors import format_currency, current_year
+from lib.template_processors import current_year
 
 sentry_sdk.init(
     dsn=SENTRY_DSN,
@@ -113,7 +112,6 @@ def extensions(app):
     mail.init_app(app)
     csrf.init_app(app)
     db.init_app(app)
-    login_manager.init_app(app)
     limiter.init_app(app)
     babel.init_app(app)
     flask_static_digest.init_app(app)
@@ -128,7 +126,6 @@ def template_processors(app):
     :param app: Flask application instance
     :return: App jinja environment
     """
-    app.jinja_env.filters["format_currency"] = format_currency
     app.jinja_env.globals.update(current_year=current_year)
 
     return app.jinja_env
