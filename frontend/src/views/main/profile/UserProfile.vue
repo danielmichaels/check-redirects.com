@@ -2,33 +2,51 @@
   <v-container fluid>
     <v-card class="ma-3 pa-3">
       <v-card-title primary-title>
-        <div class="headline primary--text">User Profile</div>
+        <div class="headline primary--text">
+          User Profile
+        </div>
       </v-card-title>
       <v-card-text>
         <div class="my-4">
-          <div class="subheading secondary--text text--lighten-3">Full Name</div>
-          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.full_name">{{userProfile.full_name}}</div>
-          <div class="title primary--text text--darken-2" v-else>-----</div>
+          <div class="subheading secondary--text text--lighten-3">
+            Full Name
+          </div>
+          <div v-if="userProfile && userProfile.full_name" class="title primary--text text--darken-2">
+            {{ userProfile.full_name }}
+          </div>
+          <div v-else class="title primary--text text--darken-2">
+            -----
+          </div>
         </div>
         <div class="my-3">
-          <div class="subheading secondary--text text--lighten-3">Email</div>
-          <div class="title primary--text text--darken-2" v-if="userProfile && userProfile.email">{{userProfile.email}}</div>
-          <div class="title primary--text text--darken-2" v-else>-----</div>
+          <div class="subheading secondary--text text--lighten-3">
+            Email
+          </div>
+          <div v-if="userProfile && userProfile.email" class="title primary--text text--darken-2">
+            {{ userProfile.email }}
+          </div>
+          <div v-else class="title primary--text text--darken-2">
+            -----
+          </div>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn to="/main/profile/edit">Edit</v-btn>
-        <v-btn to="/main/profile/password">Change password</v-btn>
+        <v-btn to="/main/profile/edit">
+          Edit
+        </v-btn>
+        <v-btn to="/main/profile/password">
+          Change password
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {readUserProfile} from '@/store/main/getters';
+import { Component, Vue } from 'vue-property-decorator';
+import { readUserProfile } from '@/store/main/getters';
 
-    @Component
+@Component
 export default class UserProfile extends Vue {
   get userProfile() {
     return readUserProfile(this.$store);

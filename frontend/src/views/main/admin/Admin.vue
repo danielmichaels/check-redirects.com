@@ -1,11 +1,11 @@
 <template>
-    <router-view></router-view>
+  <router-view />
 </template>
 
 <script lang="ts">
-import {Component, Vue} from 'vue-property-decorator';
-import {store} from '@/store';
-import {readHasAdminAccess} from '@/store/main/getters';
+import { Component, Vue } from 'vue-property-decorator';
+import { store } from '@/store';
+import { readHasAdminAccess } from '@/store/main/getters';
 
 const routeGuardAdmin = async (to, from, next) => {
   if (!readHasAdminAccess(store)) {

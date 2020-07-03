@@ -1,12 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer
-      persistent
-      :mini-variant="miniDrawer"
-      v-model="showDrawer"
-      fixed
-      app
-    >
+    <v-navigation-drawer v-model="showDrawer" persistent :mini-variant="miniDrawer" fixed app>
       <v-layout column fill-height>
         <v-list>
           <v-subheader>Main menu</v-subheader>
@@ -43,8 +37,8 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-        <v-divider></v-divider>
-        <v-list subheader v-show="hasAdminAccess">
+        <v-divider />
+        <v-list v-show="hasAdminAccess" subheader>
           <v-subheader>Admin</v-subheader>
           <v-list-tile to="/main/admin/users/all">
             <v-list-tile-action>
@@ -63,7 +57,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
-        <v-spacer></v-spacer>
+        <v-spacer />
         <v-list>
           <v-list-tile @click="logout">
             <v-list-tile-action>
@@ -73,12 +67,10 @@
               <v-list-tile-title>Logout</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-divider></v-divider>
+          <v-divider />
           <v-list-tile @click="switchMiniDrawer">
             <v-list-tile-action>
-              <v-icon
-                v-html="miniDrawer ? 'chevron_right' : 'chevron_left'"
-              ></v-icon>
+              <v-icon v-html="miniDrawer ? 'chevron_right' : 'chevron_left'" />
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>Collapse</v-list-tile-title>
@@ -88,9 +80,9 @@
       </v-layout>
     </v-navigation-drawer>
     <v-toolbar dark color="primary" app>
-      <v-toolbar-side-icon @click.stop="switchShowDrawer"></v-toolbar-side-icon>
-      <v-toolbar-title v-text="appName"></v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-toolbar-side-icon @click.stop="switchShowDrawer" />
+      <v-toolbar-title v-text="appName" />
+      <v-spacer />
       <v-menu bottom left offset-y>
         <v-btn slot="activator" icon>
           <v-icon>more_vert</v-icon>
@@ -116,10 +108,10 @@
       </v-menu>
     </v-toolbar>
     <v-content>
-      <router-view></router-view>
+      <router-view />
     </v-content>
     <v-footer class="pa-3" fixed app>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <span>&copy; {{ appName }}</span>
     </v-footer>
   </div>
@@ -129,15 +121,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { appName } from '@/env';
-import {
-  readDashboardMiniDrawer,
-  readDashboardShowDrawer,
-  readHasAdminAccess,
-} from '@/store/main/getters';
-import {
-  commitSetDashboardMiniDrawer,
-  commitSetDashboardShowDrawer,
-} from '@/store/main/mutations';
+import { readDashboardMiniDrawer, readDashboardShowDrawer, readHasAdminAccess } from '@/store/main/getters';
+import { commitSetDashboardMiniDrawer, commitSetDashboardShowDrawer } from '@/store/main/mutations';
 import { dispatchUserLogOut } from '@/store/main/actions';
 
 const routeGuardMain = async (to, from, next) => {
@@ -173,17 +158,11 @@ export default class Main extends Vue {
   }
 
   public switchShowDrawer() {
-    commitSetDashboardShowDrawer(
-      this.$store,
-      !readDashboardShowDrawer(this.$store)
-    );
+    commitSetDashboardShowDrawer(this.$store, !readDashboardShowDrawer(this.$store));
   }
 
   public switchMiniDrawer() {
-    commitSetDashboardMiniDrawer(
-      this.$store,
-      !readDashboardMiniDrawer(this.$store)
-    );
+    commitSetDashboardMiniDrawer(this.$store, !readDashboardMiniDrawer(this.$store));
   }
 
   public get hasAdminAccess() {
