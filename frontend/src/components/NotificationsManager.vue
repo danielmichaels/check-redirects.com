@@ -7,13 +7,13 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Vue, Watch} from 'vue-property-decorator';
-    import {AppNotification} from '@/store/main/state';
-    import {commitRemoveNotification} from '@/store/main/mutations';
-    import {readFirstNotification} from '@/store/main/getters';
-    import {dispatchRemoveNotification} from '@/store/main/actions';
+import {Component, Vue, Watch} from 'vue-property-decorator';
+import {AppNotification} from '@/store/main/state';
+import {commitRemoveNotification} from '@/store/main/mutations';
+import {readFirstNotification} from '@/store/main/getters';
+import {dispatchRemoveNotification} from '@/store/main/actions';
 
-    @Component
+@Component
 export default class NotificationsManager extends Vue {
     public show: boolean = false;
     public text: string = '';
@@ -56,7 +56,7 @@ export default class NotificationsManager extends Vue {
     @Watch('firstNotification')
     public async onNotificationChange(
         newNotification: AppNotification | false,
-        oldNotification: AppNotification | false,
+        oldNotification: AppNotification | false
     ) {
         if (newNotification !== this.currentNotification) {
             await this.setNotification(newNotification);

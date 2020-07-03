@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {appName} from '../env';
+import { appName } from '@/env';
 
 @Component
 export default class Index extends Vue {

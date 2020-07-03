@@ -175,14 +175,14 @@ export default class Main extends Vue {
   public switchShowDrawer() {
     commitSetDashboardShowDrawer(
       this.$store,
-      !readDashboardShowDrawer(this.$store),
+      !readDashboardShowDrawer(this.$store)
     );
   }
 
   public switchMiniDrawer() {
     commitSetDashboardMiniDrawer(
       this.$store,
-      !readDashboardMiniDrawer(this.$store),
+      !readDashboardMiniDrawer(this.$store)
     );
   }
 
