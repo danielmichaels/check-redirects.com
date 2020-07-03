@@ -37,11 +37,11 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {IUserProfileCreate,} from '@/interfaces';
-    import {dispatchCreateUser, dispatchGetUsers} from '@/store/admin/actions';
+import {Component, Vue} from 'vue-property-decorator';
+import {IUserProfileCreate} from '@/interfaces';
+import {dispatchCreateUser, dispatchGetUsers} from '@/store/admin/actions';
 
-    @Component
+@Component
 export default class CreateUser extends Vue {
   public valid = false;
   public fullName: string = '';

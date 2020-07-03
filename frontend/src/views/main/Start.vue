@@ -3,12 +3,12 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue} from 'vue-property-decorator';
-    import {store} from '@/store';
-    import {dispatchCheckLoggedIn} from '@/store/main/actions';
-    import {readIsLoggedIn} from '@/store/main/getters';
+import { Component, Vue } from 'vue-property-decorator';
+import { store } from '@/store';
+import { dispatchCheckLoggedIn } from '@/store/main/actions';
+import { readIsLoggedIn } from '@/store/main/getters';
 
-    const startRouteGuard = async (to, from, next) => {
+const startRouteGuard = async (to, from, next) => {
   await dispatchCheckLoggedIn(store);
   if (readIsLoggedIn(store)) {
     if (to.path === '/login' || to.path === '/') {

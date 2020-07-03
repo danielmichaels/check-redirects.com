@@ -8,7 +8,7 @@ import {commitSetUser, commitSetUsers} from './mutations';
 import {dispatchCheckApiError} from '../main/actions';
 import {
     commitAddNotification,
-    commitRemoveNotification
+    commitRemoveNotification,
 } from '../main/mutations';
 
 type MainContext = ActionContext<AdminState, State>;

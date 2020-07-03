@@ -20,15 +20,13 @@
 </template>
 
 <script lang="ts">
-   import { Component, Vue } from 'vue-property-decorator';
-   import {appName} from "../env";
+import { Component, Vue } from 'vue-property-decorator';
+import {appName} from '../env';
 
-   @Component
-  export default class Index extends Vue {
-   
-   }
-   
+@Component
+export default class Index extends Vue {
 
+ }
 </script>
 
 <style scoped>

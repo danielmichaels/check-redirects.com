@@ -3,7 +3,7 @@ import {apiUrl} from '@/env';
 import {
     IUserProfile,
     IUserProfileCreate,
-    IUserProfileUpdate
+    IUserProfileUpdate,
 } from './interfaces';
 
 function authHeaders(token: string) {
