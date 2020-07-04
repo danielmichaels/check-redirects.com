@@ -17,4 +17,4 @@ def check_redirect(form_data: SearchForm):
     if form_data:
         redirects = RedirectChecker(form_data["url"])
         response = redirects.response_information
-        return {"response": response}
+        return response
