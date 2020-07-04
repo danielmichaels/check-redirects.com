@@ -8,7 +8,7 @@
     </div>
     <!-- Start Search Form  -->
     <div class="container-fluid">
-      <b-form v-if="show" @submit="onSubmit">
+      <b-form v-if="show" @submit="onSubmit" @reset="resetData">
         <b-form-group id="search-input-group" label="search" label-for="search-input" description="Enter the URL here">
           <b-form-input
             id="search-input"
@@ -21,53 +21,58 @@
         <b-button type="submit" variant="primary">Submit</b-button>
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
-      <b-card class="mt-3" header="Form Data Result">
-        <pre class="m-0">{{ form }}</pre>
-      </b-card>
     </div>
-    <!--  End Search Form -->
-    <b-card class="mt-3" header="Raw Response">
-      <pre class="m-0">{{ resp }}</pre>
-    </b-card>
+    <results :prop-data="responseData"></results>
   </div>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import axios from 'axios';
-import {apiUrl} from "@/env";
+import { apiUrl } from '@/env';
+import { Component, Vue } from 'vue-property-decorator';
+import Results from '@/views/home/Results.vue';
 
-export default {
-  data() {
-    return {
-      form: {
-        url: '',
-      },
-      show: true,
-    }
-  },
-  methods: {
-    onSubmit(evt) {
-      evt.preventDefault()
-      let res = this;
-      axios.post(`${apiUrl}/api/v1/redirect/checker/`,
-              {
-                url: this.form.url,
-              })
+@Component({
+  components: { Results },
+})
+export default class Search extends Vue {
+  show = true;
+  public url = '';
+  public responseData;
+
+  form = {
+    url: '',
+  };
+
+  public clearForm() {
+    this.form.url = '';
+    this.$nextTick(() => {
+      this.show = true;
+    });
+  }
+
+  public resetData() {
+    this.responseData = '';
+    this.$forceUpdate();
+  }
+
+  public onSubmit(evt) {
+    evt.preventDefault();
+    let res = this;
+    axios
+      .post(`${apiUrl}/api/v1/redirect/checker/`, {
+        url: this.form.url,
+      })
       .then((resp) => {
-        resp.output = resp.data;
+        this.responseData = resp.data;
+        console.log(JSON.stringify(this.responseData));
+        console.log(JSON.stringify(resp));
         this.clearForm();
       })
       .catch((error) => {
-        res.output = error;
+        res.responseData = error;
       });
-      console.log(JSON.stringify(this.form))
-    },
-    clearForm() {
-      this.form.url = ''
-      this.$nextTick(() => {
-        this.show = true
-      })
-    }
+    console.log(JSON.stringify(this.form));
   }
 }
 </script>
