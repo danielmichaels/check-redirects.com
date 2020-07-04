@@ -1,13 +1,13 @@
 <template>
   <div id="search">
-    <div class="container-fluid">
+    <div class="container">
       <h1>
         Check Redirects
         <span><h5>Get redirect routes at your fingertips</h5></span>
       </h1>
     </div>
     <!-- Start Search Form  -->
-    <div class="container-fluid">
+    <div class="container">
       <b-form v-if="show" @submit="onSubmit" @reset="resetData">
         <b-form-group id="search-input-group" label="search" label-for="search-input" description="Enter the URL here">
           <b-form-input
@@ -38,7 +38,7 @@ import Results from '@/views/home/Results.vue';
 export default class Search extends Vue {
   show = true;
   public url = '';
-  public responseData;
+  public responseData = [];
 
   form = {
     url: '',
@@ -52,7 +52,7 @@ export default class Search extends Vue {
   }
 
   public resetData() {
-    this.responseData = '';
+    this.responseData = [];
     this.$forceUpdate();
   }
 
@@ -65,14 +65,11 @@ export default class Search extends Vue {
       })
       .then((resp) => {
         this.responseData = resp.data;
-        console.log(JSON.stringify(this.responseData));
-        console.log(JSON.stringify(resp));
         this.clearForm();
       })
       .catch((error) => {
         res.responseData = error;
       });
-    console.log(JSON.stringify(this.form));
   }
 }
 </script>
