@@ -3,6 +3,12 @@ from typing import Dict
 from pydantic import BaseModel
 
 
+class SearchForm(BaseModel):
+    """ Search Form. """
+
+    url: str
+
+
 class ErrorReasons(BaseModel):  # pylint: disable=too-few-public-methods
     """ Error pydantic container. """
 
