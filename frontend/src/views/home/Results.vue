@@ -53,11 +53,15 @@
           </div>
         </div>
         <div>
-          <b-card :title="`Hop ${prop.hop}`" :sub-title="`${prop.url}`">
-            <b-card-text>
-              {{ prop.url }}
-            </b-card-text>
-          </b-card>
+          <b-button v-b-toggle="'collapse-' + prop.hop" class="m-1 bg-primary">Toggle Headers</b-button>
+          <b-collapse :id="`collapse-${prop.hop}`">
+            <b-card title="Header Details">
+              <h3>Header Details</h3>
+              <div v-for="(headerItem, headerKey) in prop.headers" :key="headerItem.server">
+                <pre class="wrap-it"><small>{{ headerKey.toUpperCase() }}</small>: {{ headerItem }}</pre>
+              </div>
+            </b-card>
+          </b-collapse>
         </div>
       </div>
     </div>
@@ -123,4 +127,11 @@ export default class Index extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrap-it {
+  /*  pre tags horizontal scroll by default
+      this overrides it so its wraps
+  */
+  white-space: pre-wrap;
+}
+</style>
