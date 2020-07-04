@@ -9,6 +9,7 @@
         }}</b-button>
       </div>
 
+      <!--  branch out table into its own component    -->
       <div class="container">
         <h3>Summary</h3>
         <b-table
@@ -22,8 +23,35 @@
           :tbody-tr-class="rowClass"
         ></b-table>
       </div>
-      <!--      {{ finalUrl() }}-->
       <div v-for="prop in propData" :key="prop.id">
+        <div class="container">
+          <h4>
+            Redirects to: <a href="`${prop.url}`">{{ prop.url }}</a>
+          </h4>
+          <h4>
+            <small> IP Address: {{ prop.ipaddr }} </small>
+          </h4>
+          <div class="row">
+            <div class="col-sm">
+              <b-card class="text-left">
+                <h5><small>Status Code</small></h5>
+                <b-card-text>{{ prop.status_code.code }}</b-card-text>
+              </b-card>
+            </div>
+            <div class="col-sm">
+              <b-card class="text-left">
+                <h5><small>Status Message</small></h5>
+                <b-card-text>{{ prop.status_code.phrase }}</b-card-text>
+              </b-card>
+            </div>
+            <div class="col-sm">
+              <b-card class="text-left">
+                <h5><small>Latency</small></h5>
+                <b-card-text>{{ prop.time_elapsed }}ms</b-card-text>
+              </b-card>
+            </div>
+          </div>
+        </div>
         <div>
           <b-card :title="`Hop ${prop.hop}`" :sub-title="`${prop.url}`">
             <b-card-text>
