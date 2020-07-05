@@ -2,11 +2,11 @@
   <div id="results" class="container">
     <div v-if="propData.length > 0">
       {{ finalUrl() }}
-      <div class="">
-        <h3>click the link here</h3>
-        <b-button block variant="primary" :href="`${finalRedirectUrl}`" target="_blank">{{
-          finalRedirectUrl
-        }}</b-button>
+      <div class="container">
+        <h3>Final Redirect Link</h3>
+        <b-button block variant="primary" :href="`${finalRedirectUrl}`" target="_blank"
+          >{{ finalRedirectUrl }}
+        </b-button>
       </div>
 
       <!--  branch out table into its own component    -->
@@ -34,31 +34,33 @@
           <div class="row">
             <div class="col-sm">
               <b-card class="text-left">
-                <h5><small>Status Code</small></h5>
-                <b-card-text>{{ prop.status_code.code }}</b-card-text>
+                <h5 class="text-muted"><small>Status Code</small></h5>
+                <h4>{{ prop.status_code.code }}</h4>
               </b-card>
             </div>
             <div class="col-sm">
               <b-card class="text-left">
-                <h5><small>Status Message</small></h5>
-                <b-card-text>{{ prop.status_code.phrase }}</b-card-text>
+                <h5 class="text-muted"><small>Status Message</small></h5>
+                <h4>{{ prop.status_code.phrase }}</h4>
               </b-card>
             </div>
             <div class="col-sm">
               <b-card class="text-left">
-                <h5><small>Latency</small></h5>
-                <b-card-text>{{ prop.time_elapsed }}ms</b-card-text>
+                <h5 class="text-muted"><small>Latency</small></h5>
+                <h4>{{ prop.time_elapsed }}ms</h4>
               </b-card>
             </div>
           </div>
         </div>
         <div>
-          <b-button v-b-toggle="'collapse-' + prop.hop" class="m-1 bg-primary">Toggle Headers</b-button>
+          <b-button v-b-toggle="'collapse-' + prop.hop" class="m-1 bg-primary">Toggle Headers </b-button>
           <b-collapse :id="`collapse-${prop.hop}`">
             <b-card title="Header Details">
-              <h3>Header Details</h3>
-              <div v-for="(headerItem, headerKey) in prop.headers" :key="headerItem.server">
-                <pre class="wrap-it"><small>{{ headerKey.toUpperCase() }}</small>: {{ headerItem }}</pre>
+              <div v-for="(headerItem, headerKey) in prop.headers" :key="headerItem.server" class="wrap-it">
+                <p>
+                  <span class="text-muted is-capitalised">{{ headerKey }}</span>
+                </p>
+                <p>{{ headerItem }}</p>
               </div>
             </b-card>
           </b-collapse>
@@ -106,9 +108,10 @@ export default class Index extends Vue {
       label: 'Path',
     },
   ];
+
   finalUrl() {
     if (this.propData.length > 0) {
-      this.finalRedirectUrl = this.propData[this.propData.length - 1].url;
+      this.finalRedirectUrl = this.propData[this.propData.length - 1]['url'];
     } else {
       this.finalRedirectUrl = '';
     }
@@ -129,9 +132,11 @@ export default class Index extends Vue {
 
 <style scoped>
 .wrap-it {
-  /*  pre tags horizontal scroll by default
-      this overrides it so its wraps
-  */
+  /*  pre tags horizontal scroll by default this overrides it so its wraps */
   white-space: pre-wrap;
+}
+
+.is-capitalised {
+  text-transform: capitalize !important;
 }
 </style>
