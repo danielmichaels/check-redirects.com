@@ -19,8 +19,10 @@
             placeholder="Enter URL To Check"
           ></b-form-input>
         </b-form-group>
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <div>
+          <b-button class="mr-1" size="lg" type="submit" variant="primary">Submit</b-button>
+          <b-button size="lg" type="reset" variant="danger">Reset</b-button>
+        </div>
       </b-form>
     </div>
     <div v-if="responseData.length !== 0">
