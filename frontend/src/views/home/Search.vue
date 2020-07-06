@@ -1,15 +1,16 @@
 <template>
   <div id="search">
-    <div class="container">
+    <div class="container text-center">
       <h1>
         Check Redirects
-        <span><h5>Get redirect routes at your fingertips</h5></span>
+        <b-card-sub-title><h5>Get redirect routes at your fingertips</h5></b-card-sub-title>
       </h1>
     </div>
     <!-- Start Search Form  -->
-    <div class="container">
+    <div class="container text-center">
       <b-form v-if="show" @submit="onSubmit" @reset="resetData">
-        <b-form-group id="search-input-group" label="search" label-for="search-input" description="Enter the URL here">
+        <h3>Search</h3>
+        <b-form-group id="search-input-group" label-for="search-input">
           <b-form-input
             id="search-input"
             v-model="form.url"
@@ -22,7 +23,14 @@
         <b-button type="reset" variant="danger">Reset</b-button>
       </b-form>
     </div>
-    <results :prop-data="responseData"></results>
+    <div v-if="responseData.length !== 0">
+      <div v-if="responseData[0].error">
+        <results-error :prop-data="responseData"></results-error>
+      </div>
+      <div v-else>
+        <results-success :prop-data="responseData"></results-success>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -30,10 +38,11 @@
 import axios from 'axios';
 import { apiUrl } from '@/env';
 import { Component, Vue } from 'vue-property-decorator';
-import Results from '@/views/home/Results.vue';
+import ResultsSuccess from '@/views/home/ResultsSuccess.vue';
+import ResultsError from '@/views/home/ResultsError.vue';
 
 @Component({
-  components: { Results },
+  components: { ResultsSuccess, ResultsError },
 })
 export default class Search extends Vue {
   show = true;
@@ -69,7 +78,8 @@ export default class Search extends Vue {
         this.clearForm();
       })
       .catch((error) => {
-        res.responseData = error;
+        // push this to notification instead
+        console.log(error);
       });
   }
 }
