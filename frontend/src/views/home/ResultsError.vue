@@ -7,8 +7,24 @@
         </h2>
       </b-card-text>
       <b-card-text class="text-muted">
-        <a :href="`${propData[0].error.url}`">{{ propData[0].error.url }}</a>
+        Requested Resource: <a :href="`${propData[0].error.url}`">{{ propData[0].error.url }}</a>
       </b-card-text>
+      <b-button v-b-toggle="`collapse-errors`" class="m-1 bg-primary">
+        Possible Causes
+      </b-button>
+      <b-collapse id="collapse-errors">
+        <b-list-group flush>
+          <li class="list-group-item">
+            Incorrectly entered domain, or the domain no longer exists
+          </li>
+          <li class="list-group-item">
+            Requested resource resides within private address space, or is being served locally
+          </li>
+          <li class="list-group-item">
+            Firewall or proxy settings exist preventing resource resolution
+          </li>
+        </b-list-group>
+      </b-collapse>
     </b-card>
   </div>
 </template>
@@ -25,7 +41,6 @@ export default class Index extends Vue {
 
   constructor() {
     super();
-    console.log(this.propData);
   }
 }
 </script>
