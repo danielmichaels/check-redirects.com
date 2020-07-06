@@ -82,7 +82,6 @@ export default class Index extends Vue {
 
   constructor() {
     super();
-    console.log(this.propData);
   }
 
   finalRedirectUrl: string = '';

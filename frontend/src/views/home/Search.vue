@@ -8,7 +8,7 @@
     </div>
     <!-- Start Search Form  -->
     <div class="container text-center">
-      <b-form v-if="show" @submit="onSubmit" @reset="resetData">
+      <b-form v-if="show" class="container" @submit="onSubmit" @reset="resetData">
         <h3>Search</h3>
         <b-form-group id="search-input-group" label-for="search-input">
           <b-form-input
