@@ -1,10 +1,6 @@
 import axios from 'axios';
-import {apiUrl} from '@/env';
-import {
-    IUserProfile,
-    IUserProfileCreate,
-    IUserProfileUpdate,
-} from './interfaces';
+import { apiUrl } from '@/env';
+import { IUserProfile, IUserProfileCreate, IUserProfileUpdate } from './interfaces';
 
 function authHeaders(token: string) {
   return {

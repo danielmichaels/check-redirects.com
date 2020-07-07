@@ -6,8 +6,6 @@ export interface AppNotification {
   showProgress?: boolean;
 }
 
-export interface redirectResults {}
-
 export interface MainState {
   token: string;
   isLoggedIn: boolean | null;
@@ -16,6 +14,4 @@ export interface MainState {
   dashboardMiniDrawer: boolean;
   dashboardShowDrawer: boolean;
   notifications: AppNotification[];
-  // results: redirectResults[];
-  results: any[];
 }
