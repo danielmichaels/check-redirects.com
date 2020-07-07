@@ -26,7 +26,7 @@
       <div v-for="prop in propData" :key="prop.id">
         <div class="container">
           <h4>
-            Redirects to: <a href="`${prop.url}`">{{ prop.url }}</a>
+            Redirects to: <a :href="`${prop.url}`">{{ prop.url }}</a>
           </h4>
           <h4>
             <small> IP Address: {{ prop.ipaddr }} </small>
@@ -72,13 +72,14 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import { IResultSuccess } from '@/interfaces/results';
 
 @Component
 export default class Index extends Vue {
   @Prop({
     type: Array,
   })
-  propData!: string[];
+  propData!: IResultSuccess[];
 
   constructor() {
     super();
@@ -110,7 +111,7 @@ export default class Index extends Vue {
 
   finalUrl() {
     if (this.propData.length > 0) {
-      this.finalRedirectUrl = this.propData[this.propData.length - 1]['url'];
+      this.finalRedirectUrl = this.propData[this.propData.length - 1].url;
     } else {
       this.finalRedirectUrl = '';
     }
