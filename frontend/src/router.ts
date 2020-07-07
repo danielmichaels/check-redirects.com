@@ -11,16 +11,20 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "start" */ './views/home/Index.vue'),
-      // component: () => import(/* webpackChunkName: "start" */ './views/main/Start.vue'),
+      component: () => import(/* webpackChunkName: "index" */ './views/home/Index.vue'),
+    },
+    {
+      path: '/login',
+      // component: () => import(/* webpackChunkName: "start" */ './views/home/Index.vue'),
+      component: () => import(/* webpackChunkName: "start" */ './views/main/Start.vue'),
       children: [
         {
           path: 'login',
           // route level code-splitting
           // this generates a separate chunk (about.[hash].js) for this route
           // which is lazy-loaded when the route is visited.
-          // component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
-          component: () => import(/* webpackChunkName: "start" */ './views/home/Index.vue'),
+          component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
+          // component: () => import(/* webpackChunkName: "start" */ './views/home/Index.vue'),
         },
         {
           path: 'recover-password',
