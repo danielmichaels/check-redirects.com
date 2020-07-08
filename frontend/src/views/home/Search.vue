@@ -76,7 +76,6 @@ export default class Search extends Vue {
       })
       .then((resp) => {
         this.responseData = resp.data;
-        console.log(this.responseData);
         this.clearForm();
       })
       .catch((error) => {
