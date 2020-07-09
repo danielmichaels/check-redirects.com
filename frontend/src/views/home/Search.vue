@@ -71,7 +71,7 @@ export default class Search extends Vue {
     evt.preventDefault();
     let res = this;
     axios
-      .post(`${apiUrl}/api/v1/redirect/checker/`, {
+      .post(`${apiUrl}/api/v1/redirect/checker`, {
         url: this.form.url,
       })
       .then((resp) => {
