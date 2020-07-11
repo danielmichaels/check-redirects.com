@@ -35,9 +35,9 @@ jobs:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       env:
-        SHA: ${{ github.sha }}
+        DATE: "$(date +%x)"
       with:
-        stop_script: true
+        script_stop: true
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
@@ -46,13 +46,12 @@ jobs:
           cd check-redirects.com
           git pull
           echo building images
-          TAG=$GITHUB_RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
-          echo "run number = $GITHUB_RUN_NUMBER"
-          echo "unique id = $GITHUB_SHA"
-          echo "new sha = $SHA"
+          echo "date = $(date +%x)"
+          echo $DATE
+          #TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
           echo deploying stack
-          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$GITHUB_RUN_NUMBER bash ./scripts/deploy.sh
-          echo sleeping 30
+          #DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
+          #echo sleeping 30
           sleep 30
           echo -e '\n\n'
           docker service ls
