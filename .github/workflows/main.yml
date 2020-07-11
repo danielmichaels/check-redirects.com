@@ -34,10 +34,10 @@ jobs:
     
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
-      stop_script: true
       env:
         SHA: ${{ github.sha }}
       with:
+        stop_script: true
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
