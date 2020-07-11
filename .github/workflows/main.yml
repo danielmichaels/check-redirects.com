@@ -44,6 +44,7 @@ jobs:
           git pull
           echo building images
           TAG=$GITHUB_RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
+          echo $GITHUB_RUN_NUMBER
           echo deploying stack
           DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$GITHUB_RUN_NUMBER bash ./scripts/deploy.sh
           echo sleeping 30
