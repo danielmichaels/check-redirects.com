@@ -41,7 +41,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           git pull
-          docker ps
+          echo $(git status)
+          docker ps | tee
           echo -e '\n\n'
           docker stack ls
           echo -e '\n\n'
