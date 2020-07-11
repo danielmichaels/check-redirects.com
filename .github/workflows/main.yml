@@ -39,9 +39,12 @@ jobs:
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
-        debug: true
         script: |
-          whoami
-          ls -la
+          git pull
+          docker ps
+          echo -e '\n\n'
+          docker stack ls
+          echo -e '\n\n'
+          docker service ls
 
     
