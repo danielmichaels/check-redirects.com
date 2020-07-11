@@ -34,6 +34,8 @@ jobs:
     
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
+      env:
+        SHA: ${{ github.sha }}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
@@ -46,6 +48,7 @@ jobs:
           TAG=$GITHUB_RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
           echo "run number = $GITHUB_RUN_NUMBER"
           echo "unique id = $GITHUB_SHA"
+          echo "new sha = $SHA"
           echo deploying stack
           DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$GITHUB_RUN_NUMBER bash ./scripts/deploy.sh
           echo sleeping 30
