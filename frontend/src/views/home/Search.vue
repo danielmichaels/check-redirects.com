@@ -69,6 +69,7 @@ export default class Search extends Vue {
 
   public onSubmit(evt) {
     evt.preventDefault();
+    this.resetData();
     let res = this;
     axios
       .post(`${apiUrl}/api/v1/redirect/checker`, {
