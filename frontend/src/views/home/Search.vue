@@ -25,12 +25,19 @@
         </div>
       </b-form>
     </div>
-    <div v-if="responseData.length !== 0">
-      <div v-if="responseData[0].error">
-        <results-error :prop-data="responseData"></results-error>
-      </div>
-      <div v-else>
-        <results-success :prop-data="responseData"></results-success>
+
+    <div v-if="loading">
+      <b-overlay :show="show" rounded="sm"></b-overlay>
+    </div>
+
+    <div v-else>
+      <div v-if="responseData.length !== 0">
+        <div v-if="responseData[0].error">
+          <results-error :prop-data="responseData"></results-error>
+        </div>
+        <div v-else>
+          <results-success :prop-data="responseData"></results-success>
+        </div>
       </div>
     </div>
   </div>
@@ -50,6 +57,7 @@ export default class Search extends Vue {
   show = true;
   public url = '';
   public responseData = [];
+  loading = false;
 
   form = {
     url: '',
@@ -68,6 +76,7 @@ export default class Search extends Vue {
   }
 
   public onSubmit(evt) {
+    this.loading = true;
     evt.preventDefault();
     this.resetData();
     let res = this;
@@ -82,6 +91,9 @@ export default class Search extends Vue {
       .catch((error) => {
         // push this to notification instead
         console.log(error);
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 }
