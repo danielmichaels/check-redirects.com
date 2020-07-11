@@ -40,9 +40,9 @@ jobs:
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
         script: |
+          cd ${{ GITHUB_REPOSITORY }}
           git pull
-          echo $(git status)
-          docker ps | tee
+          docker ps
           echo -e '\n\n'
           docker stack ls
           echo -e '\n\n'
