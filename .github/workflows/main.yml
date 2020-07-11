@@ -40,7 +40,9 @@ jobs:
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd $GITHUB_REPOSITORY
+          pwd
+          cd check-redirects.com
+          pwd
           git pull
           docker ps
           echo -e '\n\n'
