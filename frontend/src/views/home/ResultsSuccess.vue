@@ -24,7 +24,7 @@
         ></b-table>
       </div>
       <div v-for="prop in propData" :key="prop.id">
-        <div class="container">
+        <div class="container wrap-it">
           <h4>
             Redirects to: <a :href="`${prop.url}`">{{ prop.url }}</a>
           </h4>
@@ -132,8 +132,13 @@ export default class Index extends Vue {
 
 <style scoped>
 .wrap-it {
-  /*  pre tags horizontal scroll by default this overrides it so its wraps */
+  /*
+  pre tags horizontal scroll by default
+  this overrides it so its wraps
+  */
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .is-capitalised {
