@@ -42,7 +42,10 @@ jobs:
         script: |
           cd check-redirects.com
           git pull
-          TAG=$GITHUB_RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh  && DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$GITHUB_RUN_NUMBER bash ./scripts/deploy.sh
+          echo building images
+          TAG=$GITHUB_RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
+          echo deploying stack
+          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$GITHUB_RUN_NUMBER bash ./scripts/deploy.sh
           echo sleeping 30
           sleep 30
           echo -e '\n\n'
