@@ -35,7 +35,7 @@ jobs:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       env:
-        DATE: $(date +%x)
+        DATE: $(date +%)
       with:
         script_stop: true
         host: ${{ secrets.HOST }}
@@ -46,8 +46,8 @@ jobs:
           cd check-redirects.com
           git pull
           echo building images
-          echo "date = $(date +%x)"
-          echo $DATE
+          echo "$(date +%s)=$(date +%s)"
+          echo "$DATE=$DATE"
           #TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
           echo deploying stack
           #DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
