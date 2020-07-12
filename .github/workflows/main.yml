@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: SSH Remote Commands
+      uses: appleboy/ssh-action@v0.1.2
+      env:
+        RUN_NUMBER: ${{ github.run_number }}
+        RUN_ID: ${{ github.run_id }}
+        SHA: ${{ github.sha }}
+        REPO: ${{ github.repository }}
+      with:
+        script_stop: true
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        envs: RUN_NUMBER, RUN_ID, SHA, REPO
+        script: |
+          cd check-redirects.com
+          echo "pwd"
+          git pull
+          echo "git pull $REPO"
+          echo "building images"
+          TAG=$RUN_ID-$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
+          echo -e "\n deploying stack \n"
+          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$RUN_ID-$RUN_NUMBER bash ./scripts/deploy.sh
+          echo "sleeping to allow services to come online"
+          sleep 60
+          docker service ls
+          docker stack ls
+
+    
