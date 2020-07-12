@@ -35,20 +35,23 @@ jobs:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       env:
-        DATE: $(date +%s)
+        RUN_NUMBER: ${{ github.run_number }}
+        RUN_ID: ${{ github.run_id }}
+        SHA: ${{ github.sha }}
       with:
         script_stop: true
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
-        envs: DATE
+        envs: RUN_NUMBER, RUN_ID, SHA
         script: |
           cd check-redirects.com
           git pull
           echo building images
-          echo "$(date +%s)=$(date +%s)"
-          echo "$DATE=$DATE"
+          echo "RUN_NUMBER=$RUN_NUMBER"
+          echo "RUN_ID=$RUN_ID"
+          echo "SHA=$SHA"
           #TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
           echo deploying stack
           #DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
