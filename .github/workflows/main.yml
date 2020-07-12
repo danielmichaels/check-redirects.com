@@ -42,6 +42,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
+        envs: DATE
         script: |
           cd check-redirects.com
           git pull
