@@ -35,7 +35,7 @@ jobs:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       env:
-        DATE: "$(date +%x)"
+        DATE: $(date +%x)
       with:
         script_stop: true
         host: ${{ secrets.HOST }}
