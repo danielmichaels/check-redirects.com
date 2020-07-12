@@ -52,13 +52,14 @@ jobs:
           echo "RUN_NUMBER=$RUN_NUMBER"
           echo "RUN_ID=$RUN_ID"
           echo "SHA=$SHA"
-          #TAG=prod FRONTEND_ENV=production bash ./scripts/build.sh
-          echo deploying stack
-          #DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
-          #echo sleeping 30
-          sleep 30
-          echo -e '\n\n'
-          docker service ls
-          docker stack ls
+          TAG=$RUN_ID$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
+          echo "TAG=$RUN_ID$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh"
+#          echo deploying stack
+#          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
+#          echo sleeping 30
+#          sleep 30
+#          echo -e '\n\n'
+#          docker service ls
+#          docker stack ls
 
     
