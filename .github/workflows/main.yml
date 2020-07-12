@@ -46,7 +46,7 @@ jobs:
           echo -e "\n deploying stack \n"
           DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$RUN_ID-$RUN_NUMBER bash ./scripts/deploy.sh
           echo "sleeping to allow services to come online"
-          sleep 30
+          sleep 60
           docker service ls
           docker stack ls
 
