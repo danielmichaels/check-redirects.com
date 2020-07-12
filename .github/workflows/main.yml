@@ -22,44 +22,34 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
-    
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.2
       env:
         RUN_NUMBER: ${{ github.run_number }}
         RUN_ID: ${{ github.run_id }}
         SHA: ${{ github.sha }}
+        REPO: ${{ github.repository }}
       with:
         script_stop: true
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
-        envs: RUN_NUMBER, RUN_ID, SHA
+        envs: RUN_NUMBER, RUN_ID, SHA, REPO
         script: |
           cd check-redirects.com
+          echo "pwd"
           git pull
-          echo building images
-          echo "RUN_NUMBER=$RUN_NUMBER"
-          echo "RUN_ID=$RUN_ID"
-          echo "SHA=$SHA"
-          TAG=$RUN_ID$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
-          echo "TAG=$RUN_ID$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh"
-#          echo deploying stack
-#          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=prod bash ./scripts/deploy.sh
-#          echo sleeping 30
-#          sleep 30
-#          echo -e '\n\n'
-#          docker service ls
-#          docker stack ls
+          echo "git pull $REPO"
+          echo "building images"
+          TAG=$RUN_ID-$RUN_NUMBER FRONTEND_ENV=production bash ./scripts/build.sh
+          echo -e "\n deploying stack \n"
+          DOMAIN=check-redirects.com TRAEFIK_TAG=check-redirects.com STACK_NAME=check-redirects-com TAG=$RUN_ID-$RUN_NUMBER bash ./scripts/deploy.sh
+          echo "sleeping to allow services to come online"
+          sleep 30
+          docker service ls
+          docker stack ls
+          echo "pruning old unused images"
+          docker system prune -a -f
 
     
