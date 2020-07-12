@@ -49,7 +49,5 @@ jobs:
           sleep 30
           docker service ls
           docker stack ls
-          echo "pruning old unused images"
-          docker system prune -a -f
 
     
