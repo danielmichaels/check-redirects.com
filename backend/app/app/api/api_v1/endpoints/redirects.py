@@ -1,4 +1,7 @@
 """"""
+from typing import List
+
+from app import schemas
 from app.redirects.redirect import RedirectChecker
 from app.schemas.redirect import SearchForm
 from fastapi import APIRouter
@@ -6,7 +9,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-@router.post("/checker")
+@router.post("/checker", response_model=List[schemas.Response])
 def check_redirect(form_data: SearchForm):
     """
     URL which will be checked for redirects.
