@@ -1,26 +1,26 @@
 [[package]]
-category = "main"
-description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
-optional = false
-python-versions = "*"
 version = "2020.6.20"
-
-[[package]]
+description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
-description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
-name = "h11"
 optional = false
 python-versions = "*"
-version = "0.9.0"
 
 [[package]]
+name = "h11"
+version = "0.9.0"
+description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 category = "main"
-description = "A minimal low-level HTTP client."
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "httpcore"
+version = "0.12.0"
+description = "A minimal low-level HTTP client."
+category = "main"
 optional = false
 python-versions = ">=3.6"
-version = "0.12.0"
 
 [package.dependencies]
 h11 = "<1.0.0"
@@ -30,62 +30,57 @@ sniffio = ">=1.0.0,<2.0.0"
 http2 = ["h2 (>=3,<5)"]
 
 [[package]]
-category = "main"
-description = "The next generation HTTP client."
 name = "httpx"
+version = "0.16.1"
+description = "The next generation HTTP client."
+category = "main"
 optional = false
 python-versions = ">=3.6"
-version = "0.16.0"
 
 [package.dependencies]
 certifi = "*"
 httpcore = ">=0.12.0,<0.13.0"
+rfc3986 = {version = ">=1.3,<2", extras = ["idna2008"]}
 sniffio = "*"
-
-[package.dependencies.rfc3986]
-extras = ["idna2008"]
-version = ">=1.3,<2"
 
 [package.extras]
 brotli = ["brotlipy (>=0.7.0,<0.8.0)"]
 http2 = ["h2 (>=3.0.0,<4.0.0)"]
 
 [[package]]
-category = "main"
-description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
+version = "2.10"
+description = "Internationalized Domain Names in Applications (IDNA)"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.10"
 
 [[package]]
-category = "main"
-description = "Validating URI References per RFC 3986"
 name = "rfc3986"
+version = "1.4.0"
+description = "Validating URI References per RFC 3986"
+category = "main"
 optional = false
 python-versions = "*"
-version = "1.4.0"
 
 [package.dependencies]
-[package.dependencies.idna]
-optional = true
-version = "*"
+idna = {version = "*", optional = true, markers = "extra == \"idna2008\""}
 
 [package.extras]
 idna2008 = ["idna"]
 
 [[package]]
-category = "main"
-description = "Sniff out which async library your code is running under"
 name = "sniffio"
+version = "1.1.0"
+description = "Sniff out which async library your code is running under"
+category = "main"
 optional = false
 python-versions = ">=3.5"
-version = "1.1.0"
 
 [metadata]
-content-hash = "8c6415e4dffba6bd89dcf5f1328181c8ddece1bc666cdc2ecd5ad7ae0b53db47"
-lock-version = "1.0"
+lock-version = "1.1"
 python-versions = "^3.8.3"
+content-hash = "62a7e239f1987305201275735323143391287fe965042437b6be1b958814c8c1"
 
 [metadata.files]
 certifi = [
@@ -101,8 +96,8 @@ httpcore = [
     {file = "httpcore-0.12.0.tar.gz", hash = "sha256:2526a38f31ac5967d38b7f593b5d8c4bd3fa82c21400402f866ba3312946acbf"},
 ]
 httpx = [
-    {file = "httpx-0.16.0-py3-none-any.whl", hash = "sha256:824325d2dfb42ee6e3be31e072199a33e5a98dc2bda76fd6c9a844871948eb73"},
-    {file = "httpx-0.16.0.tar.gz", hash = "sha256:032c624c703cfa3aafe2d3a766150b48bcf8df71e833c1440fa74151da9df143"},
+    {file = "httpx-0.16.1-py3-none-any.whl", hash = "sha256:9cffb8ba31fac6536f2c8cde30df859013f59e4bcc5b8d43901cb3654a8e0a5b"},
+    {file = "httpx-0.16.1.tar.gz", hash = "sha256:126424c279c842738805974687e0518a94c7ae8d140cd65b9c4f77ac46ffa537"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
