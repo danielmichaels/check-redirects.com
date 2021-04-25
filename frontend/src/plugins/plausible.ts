@@ -5,4 +5,4 @@ Vue.use(VuePlausible, {
   domain: 'check-redirects.com',
 });
 
-Vue.$plausible.enableAutoPageviews();
+// Vue.$plausible.enableAutoPageviews();
