@@ -5,7 +5,6 @@ import Vue from 'vue';
 import './plugins/vuetify'; // remove later
 import './plugins/vee-validate'; // remove later
 import './plugins/bootstrap';
-import './plugins/plausible';
 import App from './App.vue';
 import router from './router';
 import store from '@/store';
@@ -13,6 +12,7 @@ import './registerServiceWorker';
 import 'vuetify/dist/vuetify.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import './plugins/vue-ga';
 
 Vue.config.productionTip = false;
 
