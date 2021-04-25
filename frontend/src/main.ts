@@ -5,7 +5,7 @@ import Vue from 'vue';
 import './plugins/vuetify'; // remove later
 import './plugins/vee-validate'; // remove later
 import './plugins/bootstrap';
-import './plugins/plausible.vue';
+import './plugins/plausible';
 import App from './App.vue';
 import router from './router';
 import store from '@/store';
